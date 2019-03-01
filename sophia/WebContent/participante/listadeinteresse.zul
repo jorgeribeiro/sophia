@@ -1,0 +1,80 @@
+<zk>
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.client.pages.ParticipantesVM')">
+		<panel title="Lista de interesse" border="normal">
+			<panelchildren>
+				<vlayout>
+					<hbox align="center">
+						<textbox placeholder="Filtrar por evento"
+							instant="true" width="405px"
+							value="@bind(vm.filtroEvento.filtro1)"
+							onChange="@command('aplicarFiltro', listaDeInteresse=true)" />
+						<textbox placeholder="Filtrar por atividade"
+							instant="true" width="335px"
+							value="@bind(vm.filtroEvento.filtro2)"
+							onChange="@command('aplicarFiltro', listaDeInteresse=true)" />
+						<button label="Limpar filtro"
+							onClick="@command('limparFiltro', listaDeInteresse=true)" />
+					</hbox>
+					<grid model="@bind(vm.participantesInteressados)"
+						mold="paging" pageSize="4"
+						onCreate="@command('carregarListaDeInteressePorParticipante')"
+						emptyMessage="Sem itens encontrados.">
+						<columns>
+							<column sort="auto(atividade.evento.nome)"
+								label="Evento" />
+							<column align="center"
+								sort="auto(atividade.nome)" label="Atividade" />
+							<column align="center" width="120px"
+								label="Data" />
+							<column align="center" width="120px"
+								label="Horário" />
+							<column align="center" width="220px"
+								label="Sair da lista de interesse" />
+						</columns>
+						<template name="model"
+							var="participanteInteresse">
+							<row>
+								<label style="font-weight:bold"
+									value="@load(participanteInteresse.atividade.evento.nomeStr)" />
+								<label
+									value="@load(participanteInteresse.atividade.nomeStr)" />
+								<label
+									value="@load(participanteInteresse.atividade.dataStr)" />
+								<label
+									value="@load(participanteInteresse.atividade.horarioStr)" />
+								<button
+									tooltiptext="Sair da lista de interesse dessa atividade"
+									disabled="@load(participanteInteresse.atividade.evento.categoria ne 'PREVISTO' or participanteInteresse.atividade.atividadeCancelada)"
+									onClick="@command('abrirModalSairListaDeInteresse', participanteInteresse=participanteInteresse, visible=true)"
+									iconSclass="z-icon-user-times" height="40px" />
+							</row>
+						</template>
+						<foot>
+							<footer span="4"
+								label="@load(vm.textoRodape)" />
+						</foot>
+					</grid>
+				</vlayout>
+			</panelchildren>
+		</panel>
+
+		<window id="modalSairListaDeInteresse" mode="modal"
+			visible="false">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true"
+					value="Deseja sair definitivamente da lista de interesse dessa atividade?" />
+
+				<separator />
+				<hlayout>
+					<button id="buttonNao" label="Não"
+						onClick="@command('abrirModalSairListaDeInteresse', participanteInteresse=null, visible=false)" />
+					<button id="buttonSairListaInt"
+						label="Sair da lista de interesse"
+						autodisable="buttonSairListaInt, buttonNao"
+						onClick="@command('sairListaDeInteresse')" />
+				</hlayout>
+			</vbox>
+		</window>
+	</window>
+</zk>

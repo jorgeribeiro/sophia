@@ -1,0 +1,252 @@
+<zk>
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.gerenciamento.pages.ParticipantesVM')"
+		onCreate="@command('carregarParticipantes', filtro='2', envioMensagem=false)">
+		<panel title="Registro de capacitações de servidores"
+			border="normal">
+			<panelchildren>
+				<vlayout>
+					<vlayout spacing="1px">
+						<label
+							value="Encontre um servidor utilizando os campos de filtro abaixo:"
+							style="font-weight:bold" />
+						<hbox align="center">
+							<textbox placeholder="Filtrar por nome"
+								instant="true" width="358px"
+								value="@bind(vm.filtroParticipante.filtro1)"
+								onChange="@command('aplicarFiltro', listaDeInteresse=false)" />
+							<textbox placeholder="Filtrar por email"
+								instant="true" width="280px"
+								value="@bind(vm.filtroParticipante.filtro2)"
+								onChange="@command('aplicarFiltro', listaDeInteresse=false)" />
+							<button label="Limpar filtro"
+								onClick="@command('limparFiltro')" />
+						</hbox>
+					</vlayout>
+					<grid model="@bind(vm.participantes)" mold="paging"
+						pageSize="10" emptyMessage="Sem participantes encontrados.">
+						<columns>
+							<column sort="auto(nome)" label="Nome" />
+							<column align="center" sort="auto(email)"
+								label="E-mail" />
+							<column align="center" width="200px"
+								label="Listar capacitações" />
+							<column align="center" width="200px"
+								label="Registrar capacitação" />
+						</columns>
+						<template name="model" var="participante">
+							<row>
+								<label style="font-weight:bold"
+									value="@load(participante.nome)" />
+								<label
+									value="@load(participante.email)" />
+								<button
+									tooltiptext="Clique para listar as capacitações desse servidor"
+									onClick="@command('abrirModalListarCapacitacoes', participante=participante, visible=true)"
+									iconSclass="z-icon-list-ul" height="40px" />
+								<button
+									tooltiptext="Clique para registrar uma capacitação para esse servidor"
+									onClick="@command('abrirModalRegistrarCapacitacao', participante=participante, visible=true)"
+									iconSclass="z-icon-plus-circle" height="40px" />
+							</row>
+						</template>
+						<foot>
+							<footer span="4"
+								label="@load(vm.textoRodape1)" />
+						</foot>
+					</grid>
+				</vlayout>
+			</panelchildren>
+		</panel>
+
+		<window id="modalListarCapacitacoes" mode="modal" width="800px"
+			visible="false"
+			onCancel="@command('abrirModalListarCapacitacoes', participante=null, visible=false)">
+			<vbox align="left" style="padding:15px">
+				<label value="Listar capacitações"
+					sclass="custom-title" />
+				<vlayout spacing="7px">
+					<hlayout spacing="5px">
+						<label value="Servidor:"
+							style="font-weight:bold" />
+						<label
+							value="@load(vm.participanteSelecionado.nome)" />
+					</hlayout>
+				</vlayout>
+				<grid model="@bind(vm.capacitacoes)" mold="paging"
+					pageSize="3" emptyMessage="Sem capacitações encontradas.">
+					<columns>
+						<column label="Informações da capacitação" />
+						<column align="center" width="200px"
+							label="Remover capacitação" />
+					</columns>
+					<template name="model" var="capacitacao">
+						<row>
+							<vlayout spacing="1px">
+								<label
+									value="@load(capacitacao.nomeCapacitacao)"
+									style="font-weight:bold" />
+								<hlayout spacing="5px">
+									<hlayout>
+										<label value="Data início:"
+											style="font-weight:bold" />
+										<label
+											value="@load(capacitacao.dataInicioStr)" />
+									</hlayout>
+									<hlayout>
+										<label value="Data fim:"
+											style="font-weight:bold" />
+										<label
+											value="@load(capacitacao.dataFimStr)" />
+									</hlayout>
+								</hlayout>
+								<hlayout>
+									<label
+										value="Instituição provedora:" style="font-weight:bold" />
+									<label
+										value="@load(capacitacao.instituicaoProvedora)" />
+								</hlayout>
+								<hlayout>
+									<label value="Carga horária:"
+										style="font-weight:bold" />
+									<label
+										value="@load(capacitacao.cargaHorariaStr)" />
+								</hlayout>
+							</vlayout>
+							<button
+								tooltiptext="Clique para remover essa capacitação"
+								onClick="@command('abrirModalConfirmaRemoverCapacitacao', capacitacaoServidor=capacitacao, visible=true)"
+								iconSclass="z-icon-minus-circle" height="40px" />
+						</row>
+					</template>
+				</grid>
+
+				<separator height="10px" />
+				<div align="center">
+					<button tooltiptext="Fechar"
+						style="font-weight:bold" label="FECHAR"
+						onClick="@command('abrirModalListarCapacitacoes', participante=null, visible=false)" />
+				</div>
+			</vbox>
+		</window>
+
+		<window id="modalConfirmaRemoverCapacitacao" mode="modal"
+			visible="false">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true"
+					value="Confirma a remoção dessa capacitação desse servidor?" />
+
+				<separator />
+				<hlayout>
+					<button label="Sim"
+						onClick="@command('removerCapacitacao')" />
+					<button label="Não"
+						onClick="@command('abrirModalConfirmaRemoverCapacitacao', capacitacaoServidor=null, visible=false)" />
+				</hlayout>
+			</vbox>
+		</window>
+
+		<window id="modalRegistrarCapacitacao" mode="modal"
+			visible="false">
+			<vbox align="left" style="padding:15px">
+				<label value="Registrar capacitação"
+					sclass="custom-title" />
+				<vlayout spacing="7px">
+					<hlayout spacing="5px">
+						<label value="Servidor:"
+							style="font-weight:bold" />
+						<label
+							value="@load(vm.capacitacaoServidor.participante.nome)" />
+					</hlayout>
+				</vlayout>
+				<vlayout spacing="1px">
+					<hlayout spacing="0px">
+						<label value="Nome da capacitação:"
+							style="font-weight:bold" />
+						<label value="*"
+							style="font-weight:bold; color:#992536" />
+					</hlayout>
+					<textbox
+						value="@bind(vm.capacitacaoServidor.nomeCapacitacao)"
+						onChange="self.setValue(self.getValue().toUpperCase().trim());"
+						width="350px" />
+				</vlayout>
+				<vlayout spacing="1px">
+					<hlayout spacing="0px">
+						<label value="Instituição provedora:"
+							style="font-weight:bold" />
+						<label value="*"
+							style="font-weight:bold; color:#992536" />
+					</hlayout>
+					<textbox
+						value="@bind(vm.capacitacaoServidor.instituicaoProvedora)"
+						onChange="self.setValue(self.getValue().toUpperCase().trim());"
+						width="350px" />
+				</vlayout>
+				<hlayout spacing="10px">
+					<vlayout spacing="1px">
+						<hlayout spacing="0px">
+							<label value="Data início:"
+								style="font-weight:bold" />
+							<label value="*"
+								style="font-weight:bold; color:#992536" />
+						</hlayout>
+						<datebox format="dd/MM/yyyy"
+							placeholder="dd/mm/aaaa" maxlength="10"
+							value="@bind(vm.capacitacaoServidor.dataInicio)" />
+					</vlayout>
+					<vlayout spacing="1px">
+						<hlayout spacing="0px">
+							<label value="Data fim:"
+								style="font-weight:bold" />
+							<label value="*"
+								style="font-weight:bold; color:#992536" />
+						</hlayout>
+						<datebox format="dd/MM/yyyy"
+							placeholder="dd/mm/aaaa" maxlength="10"
+							value="@bind(vm.capacitacaoServidor.dataFim)" />
+					</vlayout>
+				</hlayout>
+				<vlayout spacing="1px">
+					<hlayout spacing="0px">
+						<label value="Carga horária:"
+							style="font-weight:bold" />
+						<label value="*"
+							style="font-weight:bold; color:#992536" />
+					</hlayout>
+					<timebox
+						value="@bind(vm.capacitacaoServidor.cargaHoraria)" format="HH:mm"
+						placeholder="hh:mm" />
+				</vlayout>
+
+				<separator height="10px" />
+				<div align="center">
+					<hbox>
+						<button tooltiptext="Fechar"
+							style="font-weight:bold" label="FECHAR"
+							onClick="@command('abrirModalRegistrarCapacitacao', participante=null, visible=false)" />
+						<button tooltiptext="Registrar capacitação"
+							style="font-weight:bold" label="REGISTRAR CAPACITAÇÃO"
+							image="imagens/save.png"
+							onClick="@command('abrirModalConfirmaRegistrarCapacitacao', visible=true)" />
+					</hbox>
+				</div>
+			</vbox>
+		</window>
+
+		<window id="modalConfirmacao" mode="modal" visible="false">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true"
+					value="Confirma o registro dessa capacitação para esse servidor?" />
+
+				<separator />
+				<hlayout>
+					<button label="Sim"
+						onClick="@command('registrarCapacitacao')" />
+					<button label="Não"
+						onClick="@command('abrirModalConfirmaRegistrarCapacitacao', visible=false)" />
+				</hlayout>
+			</vbox>
+		</window>
+	</window>
+</zk>

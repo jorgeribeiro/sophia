@@ -1,0 +1,285 @@
+<?page title="Inscrição - ESCEX - Sophia" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:w='client'>
+	<?link rel="shortcut icon" type="image/x-icon" href="../imagens/SOPHIA_icon.png"?>
+	<script type="text/javascript" src="/js/jquery.maskedinput.js" />
+	<script type="text/javascript">
+		$.mask.definitions['A']='[A-Z]';
+		$.mask.definitions['d']='[0123]';
+		$.mask.definitions['m']='[01]'; $.mask.definitions['y']='[12]';
+	</script>
+	<style dynamic="true" src="/css/base.css" />
+
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.client.pages.InscricaoVM')">
+
+		<!-- Menu de opções para participante não logado -->
+		<menubar id="menuUsuarioNaoLogado"
+			visible="@load(!vm.menuUsuarioLogadoVisible)">
+			<menuitem label="SOPHIA" image="/imagens/SOPHIA_icon.png"
+				onClick='Executions.getCurrent().sendRedirect("/index.zul")' />
+			<menuitem label="Login" sclass="right-menu"
+				onClick="@command('redirecionaLoginIDEvento')" />
+		</menubar>
+
+		<!-- Menu de opções para participante logado -->
+		<menubar id="menuUsuarioLogado"
+			visible="@load(vm.menuUsuarioLogadoVisible)">
+			<menuitem label="SOPHIA" image="/imagens/SOPHIA_icon.png"
+				onClick='Executions.getCurrent().sendRedirect("/index.zul")' />
+
+			<menu label="@load(vm.pessoa.nomeSobrenome)"
+				sclass="right-menu">
+				<menupopup>
+					<menuitem label="Baixar manual do usuário"
+						iconSclass="z-icon-file" onClick="@command('downloadManual')" />
+					<menuitem label="Sair" iconSclass="z-icon-sign-out"
+						onClick="@command('abrirModalSair', visible=true)" />
+				</menupopup>
+			</menu>
+		</menubar>
+
+		<!-- Panel para ambas situações -->
+		<panel title="@bind(vm.nomeEvento)" border="normal">
+			<panelchildren>
+				<grid model="@bind(vm.atividades)" mold="paging">
+					<columns>
+						<column label="Atividade(s)" />
+						<column label="Mais Detalhes" width="150px"
+							align="center" />
+						<column label="Inscrever" width="150px"
+							align="center" />
+					</columns>
+					<template name="model" var="atividade">
+						<row>
+							<vlayout>
+								<label value="@load(atividade.nomeStr)" />
+								<hlayout spacing="5px">
+									<label
+										sclass="custom-label-atividades-titulo"
+										value="Período de pré-inscrição: " />
+									<label
+										sclass="custom-label-atividades-conteudo"
+										value="@bind(atividade.preInscricaoDataStr)" />
+									<label
+										sclass="custom-label-atividades-titulo"
+										value="Período de Realização " />
+									<label
+										sclass="custom-label-atividades-conteudo"
+										value="@bind(atividade.dataStr)" />
+								</hlayout>
+
+							</vlayout>
+
+
+							<button
+								tooltiptext="Clique para mais detalhes dessa atividade"
+								onClick="@command('abrirModalDetalhesDaAtividade', atividade=atividade, visible=true)"
+								iconSclass="z-icon-bars" />
+
+							<button
+								tooltiptext="Clique para se inscrever nessa atividade"
+								onClick="@command('verificaLoginParaAbrirModal', atividade=atividade, visible=true)"
+								iconSclass="z-icon-arrow-right" />
+						</row>
+					</template>
+				</grid>
+
+			</panelchildren>
+		</panel>
+
+		<window id="modalLogin" mode="modal" visible="false"
+			width="500px">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true" visible="@load(vm.eventoAberto)"
+					value="Você precisa criar sua conta ou logar-se antes de se pré-inscrever
+					nessa atividade. Pressione Entrar para ser redirecionado para a página
+					de login. " />
+				<label multiline="true"
+					visible="@load(!vm.eventoAberto)"
+					value="Você precisa criar sua conta ou logar-se antes de se inscrever na
+					lista de interesse. Pressione Entrar para ser redirecionado para a
+					página de login. " />
+
+				<separator />
+				<hlayout>
+					<button label="
+						Entrar "
+						onClick="@command('redirecionaLoginIDAtividade')" />
+					<button label="Criar Conta"
+						onClick="@command('redirecionaCadastro')" />
+					<button label="Cancelar"
+						onClick="@command('verificaLoginParaAbrirModal', visible=false)" />
+				</hlayout>
+			</vbox>
+		</window>
+
+		<window id="modalConfirmacaoPreInscricao" mode="modal"
+			visible="false">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true"
+					value="@load(vm.mensagem)" />
+
+				<separator />
+				<hlayout>
+					<button id="buttonSim" label="Sim"
+						onClick="@command('inscreverParticipanteNaPreInscricao')"
+						autodisable="buttonSim, buttonNao" />
+					<button id="buttonNao" label="Não"
+						onClick="@command('verificaLoginParaAbrirModal', visible=false)" />
+				</hlayout>
+			</vbox>
+		</window>
+
+		<window id="modalConfirmacaoListaDeInteresse" mode="modal"
+			visible="false" width="400px">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true"
+					value="@load(vm.mensagem)"  />
+
+				<separator />
+				<hlayout>
+					<button id="buttonSim" label="Sim"
+						onClick="@command('inscreverParticipanteNaListaDeInteresse')"
+						autodisable="buttonSim, buttonNao" />
+					<button id="buttonNao" label="Não"
+						onClick="@command('verificaLoginParaAbrirModal', visible=false)" />
+				</hlayout>
+			</vbox>
+		</window>
+
+		<window id="modalDetalhesDaAtividade" mode="modal" width="550px"
+			visible="false"
+			onCancel="@command('abrirModalDetalhesDaAtividade', visible=false)">
+			<vbox style="padding:15px">
+				<div align="center">
+					<label
+						value="@load(vm.atividadeSelecionada.nomeStr)"
+						sclass="custom-title" />
+				</div>
+
+				<hlayout spacing="5px">
+					<vlayout spacing="1px">
+						<label sclass="custom-label-atividades-titulo"
+							value="Descrição" />
+						<label sclass="custom-label-atividades-conteudo"
+							value="@bind(vm.atividadeSelecionada.descricao)" />
+					</vlayout>
+				</hlayout>
+
+				<hlayout spacing="5px">
+					<vlayout spacing="1px">
+						<label sclass="custom-label-atividades-titulo"
+							value="Conteúdo Programático" />
+						<label sclass="custom-label-atividades-conteudo"
+							value="@bind(vm.atividadeSelecionada.conteudoProgramaticoStr)" />
+					</vlayout>
+				</hlayout>
+
+				<hlayout spacing="10px">
+					<hlayout spacing="50px">
+						<vlayout>
+							<label
+								sclass="custom-label-atividades-titulo"
+								value="Disponibilização de certificado" />
+							<label
+								sclass="custom-label-atividades-conteudo"
+								value="@bind(vm.atividadeSelecionada.geraCertificadoStr)" />
+
+							<label
+								sclass="custom-label-atividades-titulo"
+								value="Período de pré-inscrição" />
+							<label
+								sclass="custom-label-atividades-conteudo"
+								value="@bind(vm.atividadeSelecionada.preInscricaoDataStr)" />
+
+							<label
+								sclass="custom-label-atividades-titulo"
+								value="Período de realização" />
+							<label
+								sclass="custom-label-atividades-conteudo"
+								value="@bind(vm.atividadeSelecionada.dataStr)" />
+						</vlayout>
+
+
+						<vlayout>
+							<label
+								sclass="custom-label-atividades-titulo" value="Horário" />
+							<label
+								sclass="custom-label-atividades-conteudo"
+								value="@bind(vm.atividadeSelecionada.horarioStr)" />
+
+							<label
+								sclass="custom-label-atividades-titulo" value="Estilo" />
+							<label
+								sclass="custom-label-atividades-conteudo"
+								value="@bind(vm.atividadeSelecionada.estilo)" />
+
+							<label
+								sclass="custom-label-atividades-titulo" value="Número de vagas" />
+							<label
+								sclass="custom-label-atividades-conteudo"
+								value="@bind(vm.atividadeSelecionada.vagas)" />
+						</vlayout>
+
+						<vlayout>
+							<label
+								sclass="custom-label-atividades-titulo" value="Carga horária" />
+							<label
+								sclass="custom-label-atividades-conteudo"
+								value="@bind(vm.atividadeSelecionada.cargaHorariaStr)" />
+
+							<label
+								sclass="custom-label-atividades-titulo" value="Modalidade" />
+							<label
+								sclass="custom-label-atividades-conteudo"
+								value="@bind(vm.atividadeSelecionada.modalidade)" />
+						</vlayout>
+					</hlayout>
+				</hlayout>
+				<vlayout>
+					<label sclass="custom-label-atividades-titulo"
+						value="Módulos" />
+					<label sclass="custom-label-atividades-conteudo"
+						value="@bind(vm.atividadeSelecionada.modulosStr)" />
+				</vlayout>
+
+				<vlayout>
+					<label sclass="custom-label-atividades-titulo"
+						value="Público-alvo" />
+					<label sclass="custom-label-atividades-conteudo"
+						value="@bind(vm.atividadeSelecionada.tipoParticipanteStr)" />
+				</vlayout>
+				<vlayout>
+					<label sclass="custom-label-atividades-titulo"
+						value="Localização" />
+					<label sclass="custom-label-atividades-conteudo"
+						value="@bind(vm.atividadeSelecionada.local)" />
+				</vlayout>
+				<vlayout>
+					<label sclass="custom-label-atividades-titulo"
+						value="Colaborador(es)" />
+					<label sclass="custom-label-atividades-conteudo"
+						value="@bind(vm.atividadeSelecionada.colaboradoresStr)" />
+				</vlayout>
+				<div align="center">
+					<button label="Fechar"
+						onClick="@command('abrirModalDetalhesDaAtividade', visible=false)" />
+				</div>
+			</vbox>
+		</window>
+		<window id="modalSair" mode="modal" visible="false">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true"
+					value="Deseja realmente sair do sistema?" />
+
+				<separator />
+				<hlayout>
+					<button label="Sim" onClick="@command('sair')" />
+					<button label="Não"
+						onClick="@command('abrirModalSair', visible=false)" />
+				</hlayout>
+			</vbox>
+		</window>
+
+	</window>
+</zk>

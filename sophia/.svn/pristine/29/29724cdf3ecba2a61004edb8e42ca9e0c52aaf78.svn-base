@@ -1,0 +1,170 @@
+<zk>
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.client.pages.ColaboradoresVM')">
+		<panel title="Pré-cadastro de colaborador" border="normal">
+			<panelchildren>
+				<vlayout>
+					<vlayout spacing="1px"
+						visible="@load(vm.colaboradorCadastrado)">
+						<label value="Status:" style="font-weight:bold" />
+						<label
+							value="@load(vm.colaborador.statusCadastroStr)" />
+					</vlayout>
+					<hlayout spacing="15px">
+						<vlayout spacing="7px">
+							<vlayout spacing="1px">
+								<label value="Nome:"
+									style="font-weight:bold" />
+								<label
+									value="@load(vm.participante.nome)" />
+							</vlayout>
+							<vlayout spacing="1px">
+								<label value="E-mail:"
+									style="font-weight:bold" />
+								<label
+									value="@load(vm.participante.email)" />
+							</vlayout>
+						</vlayout>
+
+						<vlayout spacing="7px">
+							<vlayout spacing="1px">
+								<hlayout spacing="0px">
+									<label value="Escolaridade:"
+										style="font-weight:bold" />
+									<label value="*"
+										visible="@load(vm.colaborador.statusCadastro eq '0')"
+										style="font-weight:bold; color:#992536" />
+								</hlayout>
+								<combobox autocomplete="true" width="300px"
+									visible="@load(vm.colaborador.statusCadastro eq '0')"
+									selectedItem="@bind(vm.colaborador.escolaridade)">
+									<comboitem
+										label="ENSINO FUNDAMENTAL" value="ENSINO FUNDAMENTAL" />
+									<comboitem label="ENSINO MÉDIO"
+										value="ENSINO MÉDIO" />
+									<comboitem label="ENSINO SUPERIOR"
+										value="ENSINO SUPERIOR" />
+									<comboitem label="ESPECIALIZAÇÃO"
+										value="ESPECIALIZAÇÃO" />
+									<comboitem label="MESTRADO"
+										value="MESTRADO" />
+									<comboitem label="DOUTORADO"
+										value="DOUTORADO" />
+									<comboitem label="PÓS-DOUTORADO"
+										value="PÓS-DOUTORADO" />
+									<comboitem label="MBA" value="MBA" />
+								</combobox>
+								<label
+									value="@load(vm.colaborador.escolaridade)"
+									visible="@load(vm.colaborador.statusCadastro ne '0')" />
+							</vlayout>
+							<vlayout spacing="1px"
+								visible="@load(not empty vm.colaborador.escolaridade and vm.colaborador.escolaridade ne 'ENSINO FUNDAMENTAL' and vm.colaborador.escolaridade ne 'ENSINO MÉDIO')">
+								<hlayout spacing="0px">
+									<label value="Formação acadêmica:"
+										style="font-weight:bold" />
+									<label value="*"
+										visible="@load(vm.colaborador.statusCadastro eq '0')"
+										style="font-weight:bold; color:#992536" />
+								</hlayout>
+								<combobox autocomplete="true" width="300px"
+									model="@bind(vm.formacoesAcademicas)"
+									visible="@load(vm.colaborador.statusCadastro eq '0')"
+									selectedItem="@bind(vm.colaborador.formacaoAcademica)">
+									<template name="model"
+										var="formacaoAcademica">
+										<comboitem
+											label="@load(formacaoAcademica.nome)"
+											value="@load(formacaoAcademica)" />
+									</template>
+								</combobox>
+								<label
+									value="@load(vm.colaborador.formacaoAcademica.nome)"
+									visible="@load(vm.colaborador.statusCadastro ne '0')" />
+							</vlayout>
+							<vlayout spacing="1px"
+								visible="@load(vm.colaborador.statusCadastro eq '0')">
+								<label value="Currículo:"
+									style="font-weight:bold" />
+								<hbox align="center">
+									<button label="Carregar currículo"
+										upload="true,maxsize=10240,accept=.pdf"
+										onUpload="@command('uploadCurriculo', upEvent=event)" />
+									<image style="cursor:pointer"
+										popup="uploadTip" src="/imagens/info.png" />
+								</hbox>
+								<label multiline="true"
+									value="@bind(vm.media eq null ? '' : vm.media.name)" />
+							</vlayout>
+						</vlayout>
+
+						<vlayout spacing="7px">
+							<vlayout spacing="1px">
+								<label value="Perfil:"
+									style="font-weight:bold" />
+								<textbox rows="6" cols="30"
+									visible="@load(vm.colaborador.statusCadastro eq '0')"
+									value="@bind(vm.colaborador.perfil)" />
+								<label multiline="true"
+									value="@load(vm.colaborador.perfilStr)"
+									visible="@load(vm.colaborador.statusCadastro ne '0')" />
+							</vlayout>
+						</vlayout>
+
+						<vlayout spacing="7px">
+							<vlayout spacing="1px">
+								<label value="Observação:"
+									style="font-weight:bold" />
+								<textbox rows="6" cols="30"
+									visible="@load(vm.colaborador.statusCadastro eq '0')"
+									value="@bind(vm.colaborador.observacao)" />
+								<label multiline="true"
+									value="@load(vm.colaborador.observacaoStr)"
+									visible="@load(vm.colaborador.statusCadastro ne '0')" />
+							</vlayout>
+						</vlayout>
+
+						<separator />
+						<vlayout spacing="1px" hflex="1"
+							visible="@load(vm.colaboradorCadastrado)">
+							<label value="OBS:"
+								style="font-weight:bold" />
+							<label
+								value="Caso deseje a atualização dos seus dados, entre em contato com a secretaria da ESCEX." />
+						</vlayout>
+					</hlayout>
+
+					<div align="center"
+						visible="@load(vm.colaborador.statusCadastro eq '0')">
+						<separator />
+						<button tooltiptext="Pré-cadastro"
+							style="font-size:13px; font-weight:bold" label="PRÉ-CADASTRO"
+							onClick="@command('abrirModalConfirmaCadastro', visible=true)" />
+					</div>
+				</vlayout>
+			</panelchildren>
+		</panel>
+
+		<window id="modalConfirmacao" mode="modal" visible="false">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true"
+					value="Confirma o seu cadastro como colaborador?" />
+
+				<separator />
+				<hlayout>
+					<button label="Sim"
+						onClick="@command('cadastroColaborador')" />
+					<button label="Não"
+						onClick="@command('abrirModalConfirmaCadastro', visible=false)" />
+				</hlayout>
+			</vbox>
+		</window>
+	</window>
+
+	<popup id="uploadTip" width="290px">
+		<vbox>
+			Apenas o formato pdf é aceito. Tamanho máximo de arquivo
+			10mb.
+		</vbox>
+	</popup>
+</zk>

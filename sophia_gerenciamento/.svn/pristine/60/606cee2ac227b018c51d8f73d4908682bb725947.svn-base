@@ -1,0 +1,16 @@
+<zk>
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.gerenciamento.pages.IndexVM')">
+		<panel title="@load(vm.titleHome)" border="normal">
+			<panelchildren>
+				<div align="center">
+					<vbox align="center">
+						<image height="200px" src="imagens/SOPHIA2.png" />
+						<label value="Módulo de gerenciamento"
+							style="font-weight:bold; font-size:20px; color:#4B4B4B" />
+					</vbox>
+				</div>
+			</panelchildren>
+		</panel>
+	</window>
+</zk>

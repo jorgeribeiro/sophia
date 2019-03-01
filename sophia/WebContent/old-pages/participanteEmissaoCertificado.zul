@@ -1,0 +1,210 @@
+<?page title="Emissão de Certificado"?>
+<window title="" border="none" width="100%" 
+	apply="org.zkoss.bind.BindComposer"
+	viewModel="@id('vm') @init('br.gov.ma.tce.certificado_cursos.certificado.pages.certificadoVM')">
+
+	<borderlayout height="650px">
+		<north border="none">
+			<hbox>
+				<image height="130px" src="img/topo.png"/>
+			</hbox>
+		</north>
+
+
+		<center border="none">
+			<div align="center">
+				<div height="200px" width="500px"
+					style="margin-top:10%; box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.5);
+								   -moz-box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.5);
+								   -webkit-box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.5); background:#ffffff">
+
+
+					<hbox width="15px"
+						style="padding-top:30px; padding-right:2px;">
+						<div height="140px" width="10px"
+							style="padding-down:10px;" />
+						<vbox align="center">
+							<label style="font-weight: bold;font-size: 90%;  padding-left:15px;"
+								value="EMITIR CERTIFICADO DE CAPACITAÇÃO DO SACOP - 2017" />
+							<space />
+							<groupbox height="100px" width="470px" closable="false">
+								<caption label="Gerar Certificado" />
+								<separator/>
+								<hbox height="30px" align="left">
+									<hlayout>
+										<label value="CPF: " />
+										<space/>
+										<textbox id="textboxCPFAluno" onOk="@command('gerarCertificado')" placeholder="Ex.: 12345678901" onClick = "" value="@bind(vm.cpf)"	maxlength="11" cols="20" />
+									</hlayout>
+									<space/>
+									<hbox>
+										<button label="Emitir" onClick="@command('gerarCertificado')" />
+										<button label="Limpar" onClick="@command('novo')" />
+									</hbox>
+									<space />
+								</hbox>
+							</groupbox>
+
+							<separator />
+
+<!-- 							<groupbox height="75px" width="470px" closable="false">
+								<caption
+									label="Verificar Autenticidade da Certidão" />
+												<separator/>
+								<hbox height="30px" align="left">
+									<hlayout>
+										<label value="Código: " />
+										<space />
+										<textbox
+											value="@bind(vm.codigo)" cols="20"/>
+									</hlayout>
+									<space/>
+
+									<hbox>
+										<button label="Verificar"
+											onClick="@command('validar')" />
+										<button label="Limpar"
+											onClick="@command('limpar')" />
+									</hbox>
+								</hbox>
+							</groupbox> -->
+
+
+
+
+
+
+
+
+						</vbox>
+
+
+					</hbox>
+
+
+
+				</div>
+			</div>
+		</center>
+
+
+		<south size="3%" border="0">
+			<div align="center">
+				<label style="font-size:10px; color:#696969"
+					value="2016© Copyright" />
+				<label style="font-size:10px; color:#696969"
+					value="Superintendência de Tecnologia da Informação - Tribunal de Contas do Estado do Maranhão"
+					onClick="" />
+				<label style="font-size:10px; color:#696969"
+					value=" - Todos os Direitos Reservados" />
+			</div>
+		</south>
+	</borderlayout>
+
+
+	<!-- 
+		<hbox>
+		<image src></image>
+		<label value="Emitir Certidão de Pessoa Física"
+		style="color:blue;font-size:22px" />
+		
+		</hbox>
+		
+		
+		
+		<separator />
+		<separator />
+		
+		<panel title="Informe o CPF:" border="normal">
+		<panelchildren>
+		<separator />
+		<vbox>
+		<hbox>
+		<div width="100px">CPF:</div>
+		<div>
+		<hbox>
+		<textbox value="@bind(vm.cpf)"
+		maxlength="11" />
+		<label
+		value="Informe o CPF sem separadores de números,pontos ou traços(Ex: 56066242300)" />
+		</hbox>
+		</div>
+		</hbox>
+		<hbox>
+		<button label="Pesquisar"
+		onClick="@command('pesquisar')" />
+		<button label="Novo" onClick="@command('novo')" />
+		</hbox>
+		</vbox>
+		</panelchildren>
+		</panel>
+		<separator />
+		<separator />
+		<panel title="Verificar Autenticidade de certidão"
+		border="normal">
+		<panelchildren>
+		<separator />
+		<vbox>
+		<hbox>
+		<div width="100px">
+		Digite o código de validação:
+		</div>
+		<div>
+		<textbox value="@bind(vm.codigo)" />
+		<hbox>
+		<button label="Verificar"
+		onClick="@command('validar')" />
+		<button label="Limpar"
+		onClick="@command('limpar')" />
+		</hbox>
+		</div>
+		</hbox>
+		</vbox>
+		</panelchildren>
+		</panel>
+		
+		<window border="normal" id="winCertidaoContas"
+		title="Verificar Certidão" visible="false" width="800px"
+		height="600px">
+		
+		
+		<panel border="normal">
+		<panelchildren>
+		<div align="left">
+		<button label="Fechar"
+		onClick="@command('fecharJanela')" />
+		</div>
+		
+		<html>
+		<![CDATA[ <p>A certidão com o número de
+		autenticação<b> ]]>
+		</html>
+		<label
+		value="@bind(vm.certidaoAutentica.numeroControle)" />
+		<html>
+		<![CDATA[ </b> é legitima e foi emitida no dia
+		<b>]]>
+		</html>
+		<label value="@bind(vm.dataFormatada)" />
+		<html>
+		
+		<![CDATA[</b></p> <p>Compare a sua certidão com o
+		texto abaixo</p> <p>Este documento não vale como
+		certidão</p> ]]>
+		
+		</html>
+		
+		</panelchildren>
+		</panel>
+		<div style="overflow:auto" vflex="true">
+		
+		<html content="@bind(vm.certidaoAutentica.corpo)">
+		
+		</html>
+		</div>
+		
+		</window> -->
+
+
+
+</window>

@@ -1,0 +1,187 @@
+<zk>
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.gerenciamento.pages.ParticipantesVM')">
+		<panel title="Gerenciar inscrições" border="normal">
+			<panelchildren>
+				<vlayout>
+					<hlayout spacing="7px">
+						<vlayout spacing="1px">
+							<label value="Categoria:"
+								style="font-weight:bold" />
+							<combobox autocomplete="true" width="200px"
+								focus="true"
+								onSelect="@command('carregarEventosPorCategoria', categoria=self.value)">
+								<comboitem label="ABERTO"
+									value="ABERTO" />
+								<comboitem label="EM ANDAMENTO"
+									value="EM ANDAMENTO" />
+								<comboitem label="REALIZADO"
+									value="REALIZADO" />
+							</combobox>
+						</vlayout>
+						<vlayout spacing="1px">
+							<label value="Evento:"
+								style="font-weight:bold" />
+							<combobox id="comboEventos"
+								model="@bind(vm.eventos)" autocomplete="true" width="400px"
+								onSelect="@command('carregarListaPorEvento')"
+								selectedItem="@bind(vm.eventoSelecionado)">
+								<template name="model" var="evento">
+									<comboitem
+										label="@load(evento.nome)" value="@load(evento)" />
+								</template>
+							</combobox>
+						</vlayout>
+						<vlayout spacing="1px">
+							<label value="Atividade:"
+								style="font-weight:bold" />
+							<hbox>
+								<combobox id="comboAtividades"
+									model="@bind(vm.atividades)" autocomplete="true" width="400px"
+									onSelect="@command('carregarListaPorAtividade', listaDeInteresse=false)"
+									selectedItem="@bind(vm.atividadeSelecionada)">
+									<template name="model"
+										var="atividade">
+										<comboitem
+											label="@load(atividade.nomeStr)" value="@load(atividade)" />
+									</template>
+								</combobox>
+								<button
+									onClick="@command('atualizarLista')"
+									tooltiptext="Clique para atualizar a lista de inscrições"
+									iconSclass="z-icon-refresh" height="34px" />
+							</hbox>
+						</vlayout>
+					</hlayout>
+
+					<separator />
+					<vlayout spacing="5px">
+						<vlayout spacing="1px"
+							visible="@load(vm.atividadeSelecionada.vagasServidor ne null)">
+							<label
+								value="Atividade com vagas limitadas por público-alvo:" />
+							<hlayout>
+								<label value="Sociedade:" />
+								<label value="@load(vm.vagasSociedade)" />
+							</hlayout>
+							<hlayout>
+								<label value="Servidor do TCE-MA:" />
+								<label value="@load(vm.vagasServidor)" />
+							</hlayout>
+							<hlayout>
+								<label value="Jurisdicionado:" />
+								<label
+									value="@load(vm.vagasJurisdicionado)" />
+							</hlayout>
+						</vlayout>
+						<vlayout spacing="1px">
+							<label
+								value="Inscrições realizadas para essa atividade:" />
+							<textbox placeholder="Filtrar por nome"
+								instant="true" width="350px"
+								value="@bind(vm.filtroParticipante.filtro1)"
+								onChange="@command('aplicarFiltro', listaDeInteresse=false)" />
+						</vlayout>
+						<grid model="@bind(vm.participantesInscritos)"
+							mold="paging" pageSize="5"
+							emptyMessage="Sem inscrições encontradas.">
+							<columns>
+								<column label="Nome"
+									sort="auto(participante.nome)" />
+								<column label="Tipo de participante"
+									width="200px" align="center"
+									sort="auto(participante.tipoPessoa)" />
+								<column align="center" width="200px"
+									label="Data pré-inscrição" />
+								<column align="center" width="200px"
+									label="Aprovar inscrição" />
+								<column align="center" width="200px"
+									label="Desaprovar inscrição" />
+								<column align="center" width="200px"
+									label="Excluir inscrição" />
+							</columns>
+							<template name="model"
+								var="participanteInscrito">
+								<row>
+									<label style="font-weight:bold"
+										value="@load(participanteInscrito.participante.nome)" />
+									<label
+										value="@load(participanteInscrito.participante.tipoParticipanteStr)" />
+									<label
+										value="@load(participanteInscrito.dtPreInscricaoStr)" />
+									<button
+										tooltiptext="Clique para aprovar a inscrição desse participante"
+										onClick="@command('aprovarInscricao', participanteInscrito=participanteInscrito)"
+										disabled="@load(not empty participanteInscrito.inscricaoAprovada and participanteInscrito.inscricaoAprovada or participanteInscrito.certificadoDisponivel)"
+										iconSclass="z-icon-check-circle" height="40px" />
+									<button
+										tooltiptext="Clique para desaprovar a inscrição desse participante"
+										onClick="@command('desaprovarInscricao', participanteInscrito=participanteInscrito)"
+										disabled="@load(not empty participanteInscrito.inscricaoAprovada and !participanteInscrito.inscricaoAprovada or participanteInscrito.certificadoDisponivel)"
+										iconSclass="z-icon-ban" height="40px" />
+									<button
+										tooltiptext="Clique para excluir a inscrição desse participante"
+										onClick="@command('abrirModalExcluirInscricao', participanteInscrito=participanteInscrito, visible=true)"
+										disabled="@load(participanteInscrito.certificadoDisponivel)"
+										iconSclass="z-icon-user-times" height="40px" />
+								</row>
+							</template>
+							<foot>
+								<footer span="6"
+									label="@load(vm.textoRodape2)" />
+							</foot>
+						</grid>
+
+						<div align="center"
+							visible="@load(not empty vm.participantesInscritos)">
+							<separator />
+							<vlayout>
+								<button
+									tooltiptext="Ao clicar nesse botão serão aprovadas todas as inscrições que ainda não sofreram nenhuma alteração"
+									style="font-weight:bold" label="Aprovar todas as inscrições"
+									iconSclass="z-icon-check-circle" dir="reverse"
+									visible="@load(vm.atividadeSelecionada.vagasServidor eq null)"
+									onClick="@command('aprovarInscricoes')" />
+								<button tooltiptext="Salvar alterações"
+									style="font-weight:bold" label="SALVAR ALTERAÇÕES"
+									image="imagens/save.png"
+									onClick="@command('abrirModalConfirmaAlteracoes', visible=true)" />
+							</vlayout>
+						</div>
+					</vlayout>
+				</vlayout>
+			</panelchildren>
+		</panel>
+
+		<window id="modalExcluirInscricao" mode="modal"
+			visible="false">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true"
+					value="Deseja excluir definitivamente essa inscrição?" />
+
+				<separator />
+				<hlayout>
+					<button label="Não"
+						onClick="@command('abrirModalExcluirInscricao', participanteInscrito=null, visible=false)" />
+					<button label="Excluir inscrição"
+						onClick="@command('excluirInscricao')" />
+				</hlayout>
+			</vbox>
+		</window>
+
+		<window id="modalConfirmacao" mode="modal" visible="false">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true"
+					value="Confirma as alterações de inscrição nessa atividade?" />
+				<separator />
+				<hlayout>
+					<button id="buttonSim" label="Sim"
+						onClick="@command('confirmarAlteracoes')"
+						autodisable="buttonSim, buttonNao" />
+					<button id="buttonNao" label="Não"
+						onClick="@command('abrirModalConfirmaAlteracoes', visible=false)" />
+				</hlayout>
+			</vbox>
+		</window>
+	</window>
+</zk>

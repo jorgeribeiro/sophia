@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorio_avaliacao_reacao" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1ba3ffd9-58f5-4eed-9380-b3e03126c9da">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="DATA_LISTA" class="java.lang.String"/>
+	<parameter name="EVENTO_NOME" class="java.lang.String"/>
+	<parameter name="ATIVIDADE_NOME" class="java.lang.String"/>
+	<parameter name="COLABORADOR_NOME" class="java.lang.String"/>
+	<parameter name="IMAGE_DIR" class="java.lang.String"/>
+	<parameter name="DATA_EMISSAO" class="java.lang.String"/>
+	<parameter name="TOTAL_RESPOSTAS" class="java.lang.Integer"/>
+	<parameter name="MEDIA_GERAL" class="java.lang.Double"/>
+	<parameter name="LEGENDA_MEDIA" class="java.lang.String"/>
+	<parameter name="MEDIA_CONTEUDO_CURSO" class="java.lang.Double"/>
+	<parameter name="LEGENDA_MEDIA_CONTEUDO_CURSO" class="java.lang.String"/>
+	<parameter name="MEDIA_TEMPO_CONTEUDO" class="java.lang.Double"/>
+	<parameter name="LEGENDA_MEDIA_TEMPO_CONTEUDO" class="java.lang.String"/>
+	<parameter name="MEDIA_METODOLOGIA" class="java.lang.Double"/>
+	<parameter name="LEGENDA_MEDIA_METODOLOGIA" class="java.lang.String"/>
+	<parameter name="MEDIA_DOMINIO_INSTRUTOR" class="java.lang.Double"/>
+	<parameter name="LEGENDA_MEDIA_DOMINIO_INSTRUTOR" class="java.lang.String"/>
+	<parameter name="MEDIA_MATERIAL_DIDATICO" class="java.lang.String"/>
+	<parameter name="LEGENDA_MEDIA_MATERIAL_DIDATICO" class="java.lang.String"/>
+	<parameter name="MEDIA_APOIO_INSTITUCIONAL" class="java.lang.Double"/>
+	<parameter name="LEGENDA_MEDIA_APOIO_INSTITUCIONAL" class="java.lang.String"/>
+	<parameter name="CHART" class="java.awt.image.BufferedImage"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="conteudoCurso" class="java.lang.Integer"/>
+	<field name="tempoConteudo" class="java.lang.Integer"/>
+	<field name="metodologia" class="java.lang.Integer"/>
+	<field name="dominioInstrutor" class="java.lang.Integer"/>
+	<field name="materialDidatico" class="java.lang.Integer"/>
+	<field name="apoioInstitucional" class="java.lang.Integer"/>
+	<title>
+		<band height="98" splitType="Stretch">
+			<image>
+				<reportElement positionType="FixRelativeToBottom" stretchType="ContainerHeight" x="196" y="14" width="200" height="77" uuid="5f6beaa5-eea9-41e9-b13f-8d6dee34c780"/>
+				<imageExpression><![CDATA[$P{IMAGE_DIR} + "/ESCEX.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="410" y="14" width="225" height="76" uuid="54b9ebcf-8ab8-4ca3-8dad-4ea330a6740f"/>
+				<imageExpression><![CDATA[$P{IMAGE_DIR} + "/SOPHIA3.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="98" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="38" y="30" width="714" height="13" uuid="6caa133d-4af9-4f63-bf2c-56097b045f39"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="false" isItalic="false" pdfFontName="Helvetica" pdfEncoding="" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["EVENTO: " + $P{EVENTO_NOME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="38" y="43" width="714" height="13" uuid="2754f697-cb6e-482a-97e0-3103efe90c11"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="false" isItalic="false" pdfFontName="Helvetica" pdfEncoding="" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ATIVIDADE: " +$P{ATIVIDADE_NOME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="38" y="69" width="714" height="13" uuid="62000ae1-c0a6-4d67-8f4b-641aecc31720"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="false" isItalic="false" pdfFontName="Helvetica" pdfEncoding="" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["TOTAL DE AVALIAÇÕES:  " +$P{TOTAL_RESPOSTAS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="38" y="82" width="714" height="13" uuid="24b1ace5-ba49-4841-bcc5-9a1203bb1662"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="false" isItalic="false" pdfFontName="Helvetica" pdfEncoding="" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["MÉDIA GERAL:  " + $P{MEDIA_GERAL} +" - "+ $P{LEGENDA_MEDIA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="38" y="56" width="714" height="13" uuid="e624c2e9-37d9-4fdf-bdd7-8364bf0c4869"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="false" isItalic="false" pdfFontName="Helvetica" pdfEncoding="" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["COLABORADOR(ES): " +$P{COLABORADOR_NOME}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="270" y="10" width="310" height="20" uuid="0fc66371-3c36-44c9-b982-f4b8827ff7a1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="12" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[RELATÓRIO DE AVALIAÇÃO DE REAÇÃO]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="327" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="151" y="10" width="88" height="24" forecolor="#FFFFFF" backcolor="#B8B8B8" uuid="1ab1ccce-be52-4a4a-96c2-7ac90afb89de"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Helvetica" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[CONTEÚDO DO CURSO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="239" y="10" width="114" height="24" forecolor="#FFFFFF" backcolor="#B8B8B8" uuid="ce089d93-9dbd-4423-9e5e-702f709c065a"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Helvetica" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[TEMPO DE DURAÇÃO X CONTEÚDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="353" y="10" width="85" height="24" forecolor="#FFFFFF" backcolor="#B8B8B8" uuid="c5471885-4723-4660-b432-726d9ec745c9"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Helvetica" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[METODOLOGIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="438" y="10" width="84" height="24" forecolor="#FFFFFF" backcolor="#B8B8B8" uuid="b112bd88-b78a-4779-95ad-48676e66d8a1"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Helvetica" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[MATERIAL DIDÁTICO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="599" y="10" width="100" height="24" forecolor="#FFFFFF" backcolor="#B8B8B8" uuid="53b4d67a-6f2d-422b-8da9-1b6aad3c7a00"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Helvetica" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[APOIO INSTITUCIONAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="522" y="10" width="77" height="24" forecolor="#FFFFFF" backcolor="#B8B8B8" uuid="60fbd9e9-eb57-4ea9-a0d1-4320ec52a6a0"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Helvetica" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[DOMÍNIO DO CONTEÚDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="89" y="34" width="62" height="20" forecolor="#FFFFFF" backcolor="#B8B8B8" uuid="5f328e4e-8936-4891-884a-1392d35b2cc7"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[MÉDIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="89" y="54" width="62" height="20" forecolor="#FFFFFF" backcolor="#B8B8B8" uuid="c93c7779-7654-4e35-9fcb-07afb4da10fd"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Helvetica" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[LEGENDA]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" stretchType="ContainerHeight" x="151" y="34" width="88" height="20" uuid="1de4aee9-92ea-4060-8f4d-c3bdf6e6b40f"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{MEDIA_CONTEUDO_CURSO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="151" y="54" width="88" height="20" uuid="a0d6bd77-5c26-49b5-af19-28f87e73f306"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{LEGENDA_MEDIA_CONTEUDO_CURSO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="239" y="34" width="114" height="20" uuid="0d451185-f467-48c8-b8b7-24cd04e6bc5b"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{MEDIA_TEMPO_CONTEUDO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="239" y="54" width="114" height="20" uuid="7cf3eef5-1b9e-4476-aa32-98a1e0392224"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{LEGENDA_MEDIA_TEMPO_CONTEUDO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="353" y="34" width="85" height="20" uuid="ad9522b5-5719-49a9-bc85-45a282d0e1c2"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{MEDIA_METODOLOGIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="353" y="54" width="85" height="20" uuid="fc344a15-90cc-4c38-80bc-9d0bb9b1359f"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{LEGENDA_MEDIA_METODOLOGIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="438" y="34" width="84" height="20" uuid="ed9903fb-6588-40e0-992c-d38f9fef0fd3"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{MEDIA_MATERIAL_DIDATICO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="522" y="34" width="77" height="20" uuid="42a4ee81-85d5-4408-b6a8-42a40b9d6b73"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{MEDIA_DOMINIO_INSTRUTOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="599" y="34" width="100" height="20" uuid="96e8f8a0-b5b9-4a1b-a8c9-75261053b282"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{MEDIA_APOIO_INSTITUCIONAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="438" y="54" width="84" height="20" uuid="c082ad15-b1a2-4cb9-a30f-e1d98d2973b7"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{LEGENDA_MEDIA_MATERIAL_DIDATICO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="522" y="54" width="77" height="20" uuid="7540c086-ef6e-421b-8a39-9a87d6168cca"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{LEGENDA_MEDIA_DOMINIO_INSTRUTOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="599" y="54" width="100" height="20" uuid="4ce0f94e-d035-4ecd-a7da-fe8da72f908b"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#B8B8B8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{LEGENDA_MEDIA_APOIO_INSTITUCIONAL}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement positionType="FixRelativeToBottom" x="150" y="90" width="700" height="230" uuid="8f02d581-c764-44a8-a4ac-938275ff2d19"/>
+				<imageExpression><![CDATA[$P{CHART}]]></imageExpression>
+			</image>
+		</band>
+	</columnHeader>
+	<pageFooter>
+		<band height="31" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="563" y="14" width="226" height="13" uuid="3cdea962-e24f-4edb-ac2d-753cbed51ac4"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" isBold="false" isItalic="false" pdfFontName="Helvetica" pdfEncoding="" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Emitido em:  " +$P{DATA_EMISSAO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

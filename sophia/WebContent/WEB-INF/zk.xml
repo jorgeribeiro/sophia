@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+
+<zk>
+	<device-config>
+		<device-type>ajax</device-type>
+		<timeout-uri>/timeout.zul</timeout-uri>
+	</device-config>
+	<library-property>
+		<name>org.zkoss.zul.nativebar</name>
+		<value>true</value>
+	</library-property>
+	<library-property>
+		<name>org.zkoss.web.preferred.locale</name>
+		<value>pt</value>
+	</library-property>
+</zk>

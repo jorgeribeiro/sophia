@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="certificado" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="08fc30bd-1000-4ea2-9a6f-847c7d2c04c5">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="IMAGE_DIR" class="java.lang.String"/>
+	<parameter name="TEXTO_CERTIFICADO" class="java.lang.String"/>
+	<parameter name="TOKEN_VERIFICACAO" class="java.lang.String"/>
+	<parameter name="DATA_CERTIFICADO" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band height="555">
+			<image>
+				<reportElement x="7" y="6" width="789" height="529" uuid="67d2649b-cc2c-4961-8e11-75ebd32e03b5"/>
+				<imageExpression><![CDATA[$P{IMAGE_DIR} + "/FUNDO_LIMPO.png"]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<title>
+		<band height="223" splitType="Stretch">
+			<image>
+				<reportElement x="242" y="145" width="319" height="73" uuid="d1d68786-81a4-4a87-81ad-e2607efbbcfd"/>
+				<imageExpression><![CDATA[$P{IMAGE_DIR} + "/CERTIFICADO.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement positionType="FixRelativeToBottom" stretchType="ContainerHeight" x="450" y="83" width="159" height="53" uuid="59b8c4e9-5071-45a0-ae15-791f37bcce9c"/>
+				<imageExpression><![CDATA[$P{IMAGE_DIR} + "/ESCEX.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="200" y="86" width="168" height="52" uuid="592632ec-e2b9-4974-b57e-96493049b186"/>
+				<imageExpression><![CDATA[$P{IMAGE_DIR} + "/TCE.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<detail>
+		<band height="260" splitType="Stretch">
+			<image>
+				<reportElement x="350" y="148" width="110" height="72" uuid="30634f39-2bf0-4d4b-a712-f5a449ea5d0c"/>
+				<imageExpression><![CDATA[$P{IMAGE_DIR} + "/ASSINATURA.png"]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="65" y="21" width="668" height="94" uuid="5e49ff54-07e9-47e8-b3de-3f15b07ae381"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top">
+					<font size="15"/>
+					<paragraph firstLineIndent="100"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TEXTO_CERTIFICADO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="252" y="124" width="298" height="32" uuid="c700bcc8-5ea6-4cc0-b99e-dc9f1e85f888"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA["São Luís, " + $P{DATA_CERTIFICADO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="292" y="197" width="218" height="55" uuid="d8dc2f4f-0805-4860-8d4f-e5ea9b542e96"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true" pdfFontName="Helvetica-Bold" pdfEncoding="" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[William Jobim Farias
+Gestor da ESCEX/TCE-MA]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="62" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="62" y="22" width="350" height="18" uuid="9d652fa2-f29d-40db-a5c7-35e677d4e8db"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Token de verificação: " + $P{TOKEN_VERIFICACAO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="62" y="40" width="350" height="22" uuid="85a2ce7b-02e5-4cb4-aa7e-cb55f2acaf98"/>
+				<textElement verticalAlignment="Top">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Verifique a autenticidade desse certificado no Sophia.]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

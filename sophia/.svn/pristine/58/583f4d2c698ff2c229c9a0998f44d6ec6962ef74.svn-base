@@ -1,0 +1,116 @@
+<zk>
+	<window onOK="@command('validarCertificado')"
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.client.pages.ValidarCertificadoVM')">
+		<panel title="Validar certificado" border="normal">
+			<panelchildren>
+				<vlayout>
+					<vlayout spacing="7px">
+						<vlayout spacing="1px">
+							<label value="Token de verificação:"
+								style="font-weight:bold" />
+							<textbox focus="true"
+								value="@bind(vm.token)" width="150px" maxlength="16" />
+						</vlayout>
+					</vlayout>
+
+					<vlayout spacing="7px"
+						visible="@load(not empty vm.tokenCertificado)">
+						<grid width="700px"
+							visible="@load(not empty vm.tokenCertificado.participanteInscrito)">
+							<auxhead>
+								<auxheader colspan="2"
+									label="Informações do certificado" />
+							</auxhead>
+							<columns>
+								<column width="200px" />
+								<column />
+							</columns>
+							<rows>
+								<row>
+									<label style="font-weight:bold;"
+										value="Tipo de certificado:" />
+									<label
+										value="CERTIFICADO DE PARTICIPAÇÃO" />
+								</row>
+								<row>
+									<label style="font-weight:bold;"
+										value="Nome do participante:" />
+									<label
+										value="@load(vm.tokenCertificado.participanteInscrito.participante.nome)" />
+								</row>
+								<row>
+									<label style="font-weight:bold;"
+										value="Atividade:" />
+									<label
+										value="@load(vm.tokenCertificado.participanteInscrito.atividade.nome)" />
+								</row>
+								<row>
+									<label style="font-weight:bold;"
+										value="Evento:" />
+									<label
+										value="@load(vm.tokenCertificado.participanteInscrito.atividade.evento.nome)" />
+								</row>
+								<row>
+									<label style="font-weight:bold;"
+										value="Carga horária:" />
+									<label
+										value="@load(vm.tokenCertificado.participanteInscrito.atividade.cargaHorariaStr)" />
+								</row>
+							</rows>
+						</grid>
+
+						<grid width="700px"
+							visible="@load(not empty vm.tokenCertificado.atividadeColaborador)">
+							<auxhead>
+								<auxheader colspan="2"
+									label="Informações do certificado" />
+							</auxhead>
+							<columns>
+								<column width="200px" />
+								<column />
+							</columns>
+							<rows>
+								<row>
+									<label style="font-weight:bold;"
+										value="Tipo de certificado:" />
+									<label
+										value="CERTIFICADO DE COLABORAÇÃO" />
+								</row>
+								<row>
+									<label style="font-weight:bold;"
+										value="Nome do participante:" />
+									<label
+										value="@load(vm.tokenCertificado.atividadeColaborador.colaborador.pessoa.nome)" />
+								</row>
+								<row>
+									<label style="font-weight:bold;"
+										value="Atividade:" />
+									<label
+										value="@load(vm.tokenCertificado.atividadeColaborador.atividade.nome)" />
+								</row>
+								<row>
+									<label style="font-weight:bold;"
+										value="Evento:" />
+									<label
+										value="@load(vm.tokenCertificado.atividadeColaborador.atividade.evento.nome)" />
+								</row>
+								<row>
+									<label style="font-weight:bold;"
+										value="Carga horária:" />
+									<label
+										value="@load(vm.tokenCertificado.atividadeColaborador.atividade.cargaHorariaStr)" />
+								</row>
+							</rows>
+						</grid>
+					</vlayout>
+
+					<separator />
+					<button tooltiptext="Validar certificado"
+						style="font-size:13px; font-weight:bold"
+						label="VALIDAR CERTIFICADO"
+						onClick="@command('validarCertificado')" />
+				</vlayout>
+			</panelchildren>
+		</panel>
+	</window>
+</zk>

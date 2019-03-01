@@ -1,0 +1,391 @@
+<zk>
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.gerenciamento.pages.CertificadosVM')">
+		<panel title="Criar modelo de certificado" border="normal"
+			onCreate="@command('setCriandoModelo')">
+			<panelchildren>
+				<vlayout>
+					<label
+						value="Escolha a atividade que deseja criar o modelo de certificado:" />
+					<hlayout spacing="7px">
+						<vlayout spacing="1px">
+							<label value="Categoria:"
+								style="font-weight:bold" />
+							<combobox autocomplete="true" width="200px"
+								focus="true"
+								onSelect="@command('carregarEventosPorCategoria', categoria=self.value)">
+								<comboitem label="PREVISTO"
+									value="PREVISTO" />
+								<comboitem label="ABERTO"
+									value="ABERTO" />
+								<comboitem label="EM ANDAMENTO"
+									value="EM ANDAMENTO" />
+								<comboitem label="REALIZADO"
+									value="REALIZADO" />
+							</combobox>
+						</vlayout>
+						<vlayout spacing="1px">
+							<label value="Evento:"
+								style="font-weight:bold" />
+							<combobox id="comboEventos"
+								model="@bind(vm.eventos)" autocomplete="true" width="400px"
+								onSelect="@command('carregarListaPorEvento')"
+								selectedItem="@bind(vm.eventoSelecionado)">
+								<template name="model" var="evento">
+									<comboitem
+										label="@load(evento.nome)" value="@load(evento)" />
+								</template>
+							</combobox>
+						</vlayout>
+						<vlayout spacing="1px">
+							<label value="Atividade:"
+								style="font-weight:bold" />
+							<combobox id="comboAtividades"
+								model="@bind(vm.atividades)" autocomplete="true" width="400px"
+								selectedItem="@bind(vm.atividadeSelecionada)"
+								onSelect="@command('carregarListaPorAtividade')">
+								<template name="model"
+									var="atividade">
+									<comboitem
+										label="@load(atividade.nome)" value="@load(atividade)" />
+								</template>
+							</combobox>
+						</vlayout>
+					</hlayout>
+					<vlayout spacing="1px">
+						<label value="Tipo de certificado:"
+							style="font-weight:bold" />
+						<combobox id="comboTipos" autocomplete="true"
+							width="200px"
+							onSelect="@command('verificaModeloCertificadoJaExistente', tipo=self.value)">
+							<comboitem label="PARTICIPANTE"
+								value="PARTICIPANTE" />
+							<comboitem label="COLABORADOR"
+								value="COLABORADOR" />
+						</combobox>
+					</vlayout>
+					<vlayout spacing="5px"
+						visible="@load(vm.modeloJaExistente)">
+						<vlayout spacing="1px">
+							<label
+								visible="@load(vm.tipo eq 'PARTICIPANTE')"
+								value="Modelo de certificado já foi criado para a 
+							atividade selecionada para PARTICIPANTE." />
+							<label
+								visible="@load(vm.tipo eq 'COLABORADOR')"
+								value="Modelo de certificado já foi criado para a 
+							atividade selecionada para COLABORADOR." />
+							<label
+								value="É possível visualizar o modelo existente ou 
+							criar um novo modelo para substituir o já criado." />
+						</vlayout>
+						<div align="center">
+							<separator />
+							<vlayout>
+								<button
+									tooltiptext="Visualizar modelo em PDF" style="font-weight:bold"
+									label="Visualizar modelo em PDF"
+									onClick="@command('abrirModalVisualizaModeloPDF', visible=true)" />
+								<button tooltiptext="Criar novo modelo"
+									style="font-weight:bold" label="Criar novo modelo"
+									onClick="@command('novoModeloCertificado')" />
+							</vlayout>
+						</div>
+					</vlayout>
+					<vlayout spacing="5px"
+						visible="@load(vm.vlayoutVisible and not empty vm.atividadeSelecionada)">
+						<label
+							value="Preencha as informações do certificado:" />
+						<hlayout spacing="10px"
+							visible="@load(vm.modeloCertificado.tipo eq 'PARTICIPANTE')">
+							<vlayout spacing="5px">
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label
+											value="Texto do certificado:" style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<radiogroup
+										id="radioTextoCertificadoParticipante"
+										onCheck="@command('gerenciarTextoCertificado')">
+										<radio
+											label="Utilizar texto padrão" selected="true" />
+										<radio
+											label="Escrever texto personalizado" />
+									</radiogroup>
+								</vlayout>
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label
+											value="Selecione o template do certificado:"
+											style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<button
+										label="Clique para escolher o template"
+										onClick="@command('abrirModalSelecionaFundoDoCertificado', visible=true)" />
+								</vlayout>
+							</vlayout>
+							<vlayout spacing="1px" width="500px"
+								visible="@load(not empty vm.textoPadraoParticipante)">
+								<label value="Exemplo de texto padrão:"
+									style="font-weight:bold" />
+								<label
+									value="@load(vm.textoPadraoParticipante)" multiline="true" />
+							</vlayout>
+							<vlayout spacing="1px"
+								visible="@load(empty vm.textoPadraoParticipante)">
+								<label value="Texto personalizado:"
+									style="font-weight:bold" />
+								<textbox maxlength="500"
+									value="@bind(vm.textoPersonalizado)"
+									popup="tagParticipanteTip, type=toggle, position=end_before"
+									placeholder="Certifico que [PARTICIPANTE] participou da atividade [ATIVIDADE]... (máximo de 500 caracteres)"
+									cols="50" rows="3" />
+							</vlayout>
+						</hlayout>
+						<hlayout spacing="10px"
+							visible="@load(vm.modeloCertificado.tipo eq 'COLABORADOR')">
+							<vlayout spacing="5px">
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label
+											value="Texto do certificado:" style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<radiogroup
+										id="radioTextoCertificadoColaborador"
+										onCheck="@command('gerenciarTextoCertificado')">
+										<radio
+											label="Utilizar texto padrão" selected="true" />
+										<radio
+											label="Escrever texto personalizado" />
+									</radiogroup>
+								</vlayout>
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label
+											value="Selecione a imagem de fundo do certificado:"
+											style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<button
+										label="Clique para escolher a imagem"
+										onClick="@command('abrirModalSelecionaFundoDoCertificado', visible=true)" />
+								</vlayout>
+							</vlayout>
+							<vlayout spacing="1px" width="500px"
+								visible="@load(not empty vm.textoPadraoColaborador)">
+								<label value="Exemplo de texto padrão:"
+									style="font-weight:bold" />
+								<label
+									value="@load(vm.textoPadraoColaborador)" multiline="true" />
+							</vlayout>
+							<vlayout spacing="1px"
+								visible="@load(empty vm.textoPadraoColaborador)">
+								<label value="Texto personalizado:"
+									style="font-weight:bold" />
+								<textbox maxlength="500"
+									value="@bind(vm.textoPersonalizado)"
+									popup="tagColaboradorTip, type=toggle, position=end_before"
+									placeholder="Certifico que [COLABORADOR] colaborou como [TIPO] 
+								na atividade [ATIVIDADE]... (máximo de 500 caracteres)"
+									cols="50" rows="3" />
+							</vlayout>
+						</hlayout>
+						<div align="center">
+							<separator />
+							<vlayout>
+								<button
+									tooltiptext="Visualizar modelo em PDF" style="font-weight:bold"
+									label="Visualizar modelo em PDF"
+									onClick="@command('abrirModalVisualizaModeloPDF', visible=true)" />
+								<button tooltiptext="Salvar alterações"
+									style="font-weight:bold" label="SALVAR ALTERAÇÕES"
+									image="imagens/save.png"
+									onClick="@command('abrirModalConfirmaAlteracoes', visible=true)" />
+							</vlayout>
+						</div>
+					</vlayout>
+				</vlayout>
+			</panelchildren>
+		</panel>
+
+		<window id="modalSelecionaFundoDoCertificado" mode="modal"
+			visible="false" width="650px">
+			<vbox align="left" style="padding:15px">
+				<label value="Selecionar template do certificado"
+					sclass="custom-title" />
+				<grid model="@bind(vm.fundosDeCertificado)"
+					mold="paging" pageSize="4">
+					<columns>
+						<column align="center" label="Nome" />
+						<column align="center" label="Template"
+							width="200px" />
+						<column align="center" label="Selecionar"
+							width="120px" />
+					</columns>
+					<template name="model" var="fundo">
+						<row>
+							<label value="@load(fundo.nome)" />
+							<button
+								tooltiptext="Clique para visualizar o template"
+								label="Visualizar"
+								onClick="@command('abrirModalVisualizaFundoDoCertificado', 
+									fundoCertificado=fundo, visible=true)" />
+							<button
+								tooltiptext="Clique para selecionar esse template"
+								onClick="@command('selecionarTemplateDoCertificado', fundoCertificado=fundo)"
+								iconSclass="z-icon-check-circle" />
+						</row>
+					</template>
+				</grid>
+
+				<separator />
+				<div align="center">
+					<vbox align="center">
+						<button tooltiptext="Enviar novo template"
+							style="font-weight:bold" label="Enviar novo template"
+							onClick="@command('abrirModalEnviarNovoTemplate', visible=true)" />
+						<button tooltiptext="Fechar"
+							style="font-weight:bold" label="FECHAR"
+							onClick="@command('abrirModalSelecionaFundoDoCertificado', visible=false)" />
+					</vbox>
+				</div>
+			</vbox>
+		</window>
+
+		<window id="modalVisualizaFundoDoCertificado" mode="modal"
+			visible="false">
+			<vbox align="left" style="padding:15px">
+				<iframe id="iframeCertificado" width="690px"
+					height="510px" />				
+
+				<separator />
+				<div align="center">
+					<button tooltiptext="Fechar"
+						style="font-weight:bold" label="FECHAR"
+						onClick="@command('abrirModalVisualizaFundoDoCertificado', 
+									fundoCertificado=null, visible=false)" />
+				</div>
+			</vbox>
+		</window>
+
+		<window id="modalEnviarNovoTemplate" mode="modal"
+			visible="false">
+			<vbox align="left" style="padding:15px">
+				<label value="Enviar novo template"
+					sclass="custom-title" />
+				<vlayout spacing="1px">
+					<hlayout spacing="0px">
+						<label value="Atribua um nome ao template:"
+							style="font-weight:bold" />
+						<label value="*"
+							style="font-weight:bold; color:#992536" />
+					</hlayout>
+					<textbox value="@bind(vm.fundoCertificado.nome)" />
+				</vlayout>
+				<vlayout spacing="1px">
+					<hlayout spacing="0px">
+						<label value="Selecione o template:"
+							style="font-weight:bold" />
+						<label value="*"
+							style="font-weight:bold; color:#992536" />
+					</hlayout>
+					<button label="Carregar template"
+						upload="true,accept=.jasper"
+						onUpload="@command('uploadArquivo', upEvent=event)" />
+					<label multiline="true"
+						value="@bind(vm.media eq null ? '' : vm.media.name)" />
+				</vlayout>
+
+				<separator />
+				<div align="center">
+					<vbox align="center">
+						<button tooltiptext="Upload de template"
+							style="font-weight:bold" label="UPLOAD DE TEMPLATE"
+							iconSclass="z-icon-upload" dir="reverse"
+							onClick="@command('abrirModalConfirmaUpload', visible=true)" />
+						<button tooltiptext="Fechar"
+							style="font-weight:bold" label="FECHAR"
+							onClick="@command('abrirModalEnviarNovoTemplate', visible=false)" />
+					</vbox>
+				</div>
+			</vbox>
+		</window>
+
+		<window id="modalConfirmacaoUpload" mode="modal"
+			visible="false">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true"
+					value="Confirma o upload de imagem de fundo?" />
+
+				<separator />
+				<hlayout>
+					<button id="buttonSim" label="Sim"
+						onClick="@command('uploadTemplate')"
+						autodisable="buttonSim, buttonNao" />
+					<button id="buttonNao" label="Não"
+						onClick="@command('abrirModalConfirmaUpload', visible=false)" />
+				</hlayout>
+			</vbox>
+		</window>
+
+		<window id="modalVisualizaModeloDoCertificado" mode="modal"
+			visible="false">
+			<vbox align="center" style="padding:15px">
+				<iframe id="frameModeloCertificado" width="690px"
+					height="510px" />
+				<button tooltiptext="Fechar" style="font-weight:bold"
+					label="FECHAR"
+					onClick="@command('abrirModalVisualizaModeloPDF', visible=false)" />
+			</vbox>
+		</window>
+
+		<window id="modalConfirmacao" mode="modal" visible="false">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true"
+					value="Confirma a criação desse modelo de certificado?" />
+
+				<separator />
+				<hlayout>
+					<button id="buttonSim" label="Sim"
+						onClick="@command('criarModeloDeCertificado')"
+						autodisable="buttonSim, buttonNao" />
+					<button id="buttonNao" label="Não"
+						onClick="@command('abrirModalConfirmaAlteracoes', visible=false)" />
+				</hlayout>
+			</vbox>
+		</window>
+	</window>
+
+	<popup id="tagParticipanteTip" width="400px">
+		<html>
+			<![CDATA[Utilize as tags descritas a seguir para que o
+			sistema insira automaticamente os dados da atividade,
+			evento, participante, carga horária e dia/período no texto
+			personalizado do certificado.<br/>Tags: <br/> [PARTICIPANTE]
+			= nome do participante <br/> [ATIVIDADE] = nome da atividade
+			<br/> [EVENTO] = nome do evento <br/> [CARGA] = carga
+			horária da atividade <br/> [PERIODO] = período da
+			atividade]]>
+		</html>
+	</popup>
+
+	<popup id="tagColaboradorTip" width="400px">
+		<html>			
+			<![CDATA[Utilize as tags descritas a seguir para que o
+			sistema insira automaticamente os dados da atividade,
+			evento, participante, carga horária e dia/período no texto
+			personalizado do certificado.<br/>Tags: <br/> [COLABORADOR]
+			= nome do colaborador <br/> [TIPO] = tipo de colaboração
+			<br/> [ATIVIDADE] = nome da atividade <br/> [EVENTO] = nome
+			do evento <br/> [CARGA] = carga horária da atividade <br/>
+			[PERIODO] = período da atividade]]>																		
+		</html>
+	</popup>
+</zk>

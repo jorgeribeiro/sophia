@@ -1,0 +1,192 @@
+<zk>
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.gerenciamento.pages.ParticipantesVM')">
+		<panel title="Envio de mensagens" border="normal">
+			<panelchildren>
+				<vlayout>
+					<vlayout spacing="1px">
+						<label value="Enviar mensagens filtrando por:"
+							style="font-weight:bold" />
+						<radiogroup focus="true"
+							onCheck="@command('selecionaFiltro', filtro=self.selectedItem.label)">
+							<radio label="Evento" />
+							<radio label="Atividade" />
+							<radio label="Participantes" />
+							<radio label="Colaboradores"
+								visible="false" />
+						</radiogroup>
+					</vlayout>
+
+					<hlayout spacing="7px">
+						<vlayout id="vlayoutCategorias" spacing="1px">
+							<label value="Categoria:"
+								style="font-weight:bold" />
+							<combobox id="comboCategorias"
+								autocomplete="true" width="200px"
+								onSelect="@command('carregarEventosPorCategoria', categoria=self.value)">
+								<comboitem label="PREVISTO"
+									value="PREVISTO" />
+								<comboitem label="ABERTO"
+									value="ABERTO" />
+								<comboitem label="EM ANDAMENTO"
+									value="EM ANDAMENTO" />
+								<comboitem label="REALIZADO"
+									value="REALIZADO" />
+								<comboitem label="CANCELADO"
+									value="CANCELADO" />
+							</combobox>
+						</vlayout>
+						<vlayout id="vlayoutEventos" spacing="1px">
+							<label value="Evento:"
+								style="font-weight:bold" />
+							<combobox id="comboEventos"
+								model="@bind(vm.eventos)" autocomplete="true" width="400px"
+								onSelect="@command('carregarListaPorEvento')"
+								selectedItem="@bind(vm.eventoSelecionado)">
+								<template name="model" var="evento">
+									<comboitem
+										label="@load(evento.nome)" value="@load(evento)" />
+								</template>
+							</combobox>
+						</vlayout>
+						<vlayout id="vlayoutAtividades" spacing="1px"
+							visible="false">
+							<label value="Atividade:"
+								style="font-weight:bold" />
+							<combobox id="comboAtividades"
+								model="@bind(vm.atividades)" autocomplete="true" width="400px"
+								onSelect="@command('carregarListaPorAtividade', listaDeInteresse=false)"
+								selectedItem="@bind(vm.atividadeSelecionada)">
+								<template name="model"
+									var="atividade">
+									<comboitem
+										label="@load(atividade.nome)" value="@load(atividade)" />
+								</template>
+							</combobox>
+						</vlayout>
+						<vlayout id="vlayoutParticipantes" spacing="1px"
+							visible="false">
+							<label value="Enviar para:"
+								style="font-weight:bold" />
+							<combobox id="comboParticipantes"
+								width="400px" autocomplete="true"
+								onSelect="@command('carregarParticipantes', filtro=self.selectedItem.label, envioMensagem=true)">
+								<comboitem
+									label="Todos os participantes" />
+								<comboitem
+									label="Todos SERVIDOR DO TCE-MA e TERCEIRIZADOS" />
+								<comboitem label="Todos JURISDICIONADO" />
+								<comboitem label="Todos SOCIEDADE" />
+							</combobox>
+						</vlayout>
+					</hlayout>
+
+
+					<vlayout id="vlayoutFiltroNome" visible="false">
+						<label
+							value="Encontre o participante desejado utilizando o filtro abaixo:"
+							style="font-weight:bold" />
+						<hbox align="center">
+							<textbox placeholder="Filtrar por nome"
+								instant="true" width="358px" focus="true"
+								value="@bind(vm.filtroParticipante.filtro1)"
+								onChange="@command('aplicarFiltroEmEnvioDeMensagens')" />
+						</hbox>
+					</vlayout>
+
+					<vlayout spacing="1px">
+						<label value="Destinatários:"
+							style="font-weight:bold" />
+						<grid model="@bind(vm.destinatarios)"
+							mold="paging" pageSize="5"
+							emptyMessage="Sem participantes encontrados">
+							<columns>
+								<column label="Nome" />
+								<column align="center" label="E-mail" />
+								<column align="center" width="200px"
+									label="Tipo de participante" />
+								<column align="center" width="180px"
+									sort="auto(municipio.nome)" label="Município/Estado" />
+								<column align="center" width="200px"
+									label="Enviar mensagem" />
+							</columns>
+							<template name="model" var="destinatario">
+								<row>
+									<label style="font-weight:bold"
+										value="@load(destinatario.nome)" />
+									<label
+										value="@load(destinatario.email)" />
+									<label
+										value="@load(destinatario.tipoParticipante)" />
+									<label
+										value="@load(destinatario.pessoa.municipioEstadoStr)" />
+									<button
+										tooltiptext="Clique para marcar ou desmarcar destinatário"
+										onClick="@command('selecionarDestinatario', destinatario=destinatario)"
+										iconSclass="@load(destinatario.selecionado ? 'z-icon-check' : 'z-icon-circle')"
+										height="40px" />
+								</row>
+							</template>
+							<foot>
+								<footer span="4"
+									label="@load(vm.textoRodape4)" />
+							</foot>
+						</grid>
+					</vlayout>
+					<div align="center">
+						<separator />
+						<vlayout>
+							<button
+								tooltiptext="Selecionar apenas os participantes com inscrição aprovada"
+								style="font-weight:bold"
+								visible="@load(not empty vm.destinatarios and vm.eventoSelecionado ne null and vm.eventoSelecionado.categoria ne 'PREVISTO')"
+								iconSclass="z-icon-check" dir="reverse"
+								label="Selecionar apenas os participantes com inscrição aprovada"
+								onClick="@command('selecionarApenasInscricaoAprovada')" />
+							<button
+								tooltiptext="Selecionar todos os participantes"
+								style="font-weight:bold"
+								visible="@load(not empty vm.destinatarios)"
+								iconSclass="z-icon-check" dir="reverse"
+								label="Selecionar todos os participantes"
+								onClick="@command('selecionarTodosParticipantes')" />
+						</vlayout>
+					</div>
+
+					<separator />
+					<vlayout spacing="1px">
+						<label value="Escreva a mensagem:"
+							style="font-weight:bold" />
+						<textbox rows="4" cols="60" width="600px"
+							multiline="true" value="@bind(vm.textoMensagem)" />
+					</vlayout>
+
+					<div align="center">
+						<separator />
+						<button tooltiptext="Enviar mensagem"
+							style="font-weight:bold"
+							visible="@load(not empty vm.destinatarios)"
+							iconSclass="z-icon-envelope-square" dir="reverse"
+							label="Enviar mensagem"
+							onClick="@command('abrirModalConfirmaEnviarMensagem', visible=true)" />
+					</div>
+				</vlayout>
+			</panelchildren>
+		</panel>
+
+		<window id="modalConfirmacao" mode="modal" visible="false">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true"
+					value="Confirma o envio de mensagem para os participantes selecionados?" />
+
+				<separator />
+				<hlayout>
+					<button label="Sim"
+						onClick="@command('enviarMensagem')" />
+					<button label="Não"
+						onClick="@command('abrirModalConfirmaEnviarMensagem', visible=false)" />
+				</hlayout>
+			</vbox>
+		</window>
+	</window>
+</zk>

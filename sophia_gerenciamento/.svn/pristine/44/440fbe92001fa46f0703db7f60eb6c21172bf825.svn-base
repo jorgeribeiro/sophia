@@ -1,0 +1,562 @@
+<zk xmlns:w="client">
+	<script type="text/javascript" src="/js/jquery.maskedinput.js" />
+	<script type="text/javascript">
+		$.mask.definitions['A']='[A-Z]';
+		$.mask.definitions['d']='[0123]';
+		$.mask.definitions['m']='[01]'; $.mask.definitions['y']='[12]';
+	</script>
+
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.gerenciamento.pages.AtividadesVM')">
+		<panel title="Criar atividade" border="normal">
+			<panelchildren>
+				<vlayout>
+					<hlayout spacing="7px">
+						<vlayout spacing="1px">
+							<hlayout spacing="0px">
+								<label value="Categoria:"
+									style="font-weight:bold" />
+								<label value="*"
+									style="font-weight:bold; color:#992536" />
+							</hlayout>
+							<combobox autocomplete="true" width="200px"
+								focus="true"
+								onSelect="@command('carregarEventosPorCategoria', categoria=self.value)">
+								<comboitem label="PREVISTO"
+									value="PREVISTO" />
+								<comboitem label="ABERTO"
+									value="ABERTO" />
+								<comboitem label="EM ANDAMENTO"
+									value="EM ANDAMENTO" />
+								<comboitem label="REALIZADO"
+									value="REALIZADO" />
+							</combobox>
+						</vlayout>
+						<vlayout spacing="1px">
+							<hlayout spacing="0px">
+								<label value="Evento:"
+									style="font-weight:bold" />
+								<label value="*"
+									style="font-weight:bold; color:#992536" />
+							</hlayout>
+							<combobox id="comboEventos"
+								model="@bind(vm.eventos)" autocomplete="true" width="400px"
+								onSelect="@command('carregarDadosEvento')"
+								selectedItem="@bind(vm.atividade.evento)">
+								<template name="model" var="evento">
+									<comboitem
+										label="@load(evento.nome)" value="@load(evento)" />
+								</template>
+							</combobox>
+						</vlayout>
+					</hlayout>
+
+					<separator />
+					<hlayout spacing="15px">
+						<vlayout spacing="7px">
+							<vlayout spacing="1px">
+								<hlayout spacing="0px">
+									<label value="Nome:"
+										style="font-weight:bold" />
+									<label value="*"
+										style="font-weight:bold; color:#992536" />
+								</hlayout>
+								<textbox
+									value="@bind(vm.atividade.nome)"
+									onChange="self.setValue(self.getValue().toUpperCase().trim());"
+									width="350px" />
+							</vlayout>
+							<vlayout spacing="1px">
+								<hlayout spacing="0px">
+									<label value="Descrição:"
+										style="font-weight:bold" />
+									<label value="*"
+										style="font-weight:bold; color:#992536" />
+								</hlayout>
+								<textbox rows="4" cols="50"
+									width="350px"
+									onChange="self.setValue(self.getValue().toUpperCase().trim());"
+									value="@bind(vm.atividade.descricao)" />
+							</vlayout>
+							<vlayout spacing="1px">
+								<hlayout spacing="0px">
+									<label value="Tipo de atividade:"
+										style="font-weight:bold" />
+									<label value="*"
+										style="font-weight:bold; color:#992536" />
+								</hlayout>
+								<hbox>
+									<combobox
+										model="@bind(vm.tipoDeAtividades)" autocomplete="true"
+										selectedItem="@bind(vm.atividade.tipoAtividade)"
+										width="200px">
+										<template name="model"
+											var="tipoDeAtividade">
+											<comboitem
+												label="@load(tipoDeAtividade.nome)"
+												value="@load(tipoDeAtividade)" />
+										</template>
+									</combobox>
+									<button
+										visible="@bind(!vm.adicionarTipoVisible)"
+										tooltiptext="Adicionar novo tipo" label="Adicionar novo tipo"
+										onClick="@command('exibirOpcoesAdicionarNovoTipo')" />
+								</hbox>
+							</vlayout>
+							<vlayout spacing="1px"
+								visible="@bind(vm.adicionarTipoVisible)">
+								<hlayout spacing="0px">
+									<label value="Novo tipo:"
+										style="font-weight:bold" />
+									<label value="*"
+										style="font-weight:bold; color:#992536" />
+								</hlayout>
+								<hbox>
+									<textbox
+										value="@bind(vm.tipoAtividade.nome)"
+										onChange="self.setValue(self.getValue().toUpperCase().trim());"
+										width="160px" />
+									<button tooltiptext="Adicionar tipo"
+										label="Adicionar tipo"
+										onClick="@command('adicionarNovoTipo')" />
+								</hbox>
+							</vlayout>
+							<hlayout spacing="10px">
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="Modalidade:"
+											style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<combobox
+										selectedItem="@bind(vm.atividade.modalidade)"
+										onSelect="@command('modalidadeEAD')">
+										<comboitem label="PRESENCIAL"
+											value="PRESENCIAL" />
+										<comboitem
+											label="A DISTÂNCIA (EAD)" value="A DISTÂNCIA (EAD)" />
+									</combobox>
+								</vlayout>
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="Carga horária:"
+											style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<timebox instant="true"
+										onChange="@command('carregarIntervalosPorDia')" cols="7"
+										value="@bind(vm.atividade.cargaHoraria)" format="HH:mm"
+										placeholder="hh:mm" />
+								</vlayout>
+							</hlayout>
+							<hlayout spacing="10px">
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label
+											value="Tipo de participante:" style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<combobox
+										onSelect="@command('abrirModalConfirmaGerenciarVagas', visible=true)"
+										selectedItem="@bind(vm.atividade.tipoParticipante)">
+										<comboitem label="TODOS"
+											value="7" />
+										<comboitem
+											label="apenas SERVIDOR DO TCE-MA" value="2" />
+										<comboitem
+											label="apenas JURIDISCIONADO" value="3" />
+										<comboitem
+											label="apenas SOCIEDADE" value="1" />
+										<comboitem
+											label="SERVIDOR DO TCE-MA e JURIDISCIONADO" value="4" />
+										<comboitem
+											label="SERVIDOR DO TCE-MA e SOCIEDADE" value="5" />
+										<comboitem
+											label="JURIDISCIONADO e SOCIEDADE" value="6" />
+									</combobox>
+								</vlayout>
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="Vagas:"
+											style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<intbox
+										value="@bind(vm.atividade.vagas)" />
+								</vlayout>
+							</hlayout>
+							<vlayout spacing="1px"
+								visible="@load(vm.gerenciarVagasVisible and (vm.atividade.tipoParticipante eq '7' or vm.atividade.tipoParticipante eq '5' or vm.atividade.tipoParticipante eq '6'))">
+								<hlayout spacing="0px">
+									<label value="Vagas para SOCIEDADE:"
+										style="font-weight:bold" />
+									<label value="*"
+										style="font-weight:bold; color:#992536" />
+								</hlayout>
+								<intbox
+									value="@bind(vm.atividade.vagasSociedade)" />
+							</vlayout>
+							<vlayout spacing="1px"
+								visible="@bind(vm.gerenciarVagasVisible and (vm.atividade.tipoParticipante eq '7' or vm.atividade.tipoParticipante eq '5' or vm.atividade.tipoParticipante eq '4'))">
+								<hlayout spacing="0px">
+									<label value="Vagas para SERVIDOR:"
+										style="font-weight:bold" />
+									<label value="*"
+										style="font-weight:bold; color:#992536" />
+								</hlayout>
+								<intbox
+									value="@bind(vm.atividade.vagasServidor)" />
+							</vlayout>
+							<vlayout spacing="1px"
+								visible="@bind(vm.gerenciarVagasVisible and (vm.atividade.tipoParticipante eq '7' or vm.atividade.tipoParticipante eq '4' or vm.atividade.tipoParticipante eq '6'))">
+								<hlayout spacing="0px">
+									<label
+										value="Vagas para JURISDICIONADO:" style="font-weight:bold" />
+									<label value="*"
+										style="font-weight:bold; color:#992536" />
+								</hlayout>
+								<intbox
+									value="@bind(vm.atividade.vagasJurisdicionado)" />
+							</vlayout>
+							<hlayout spacing="10px">
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="Estilo:"
+											style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<combobox
+										selectedItem="@bind(vm.atividade.estilo)">
+										<comboitem label="GRATUITO"
+											value="GRATUITO" />
+										<comboitem label="PAGO"
+											value="PAGO" />
+									</combobox>
+								</vlayout>
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="Gera certificado:"
+											style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<combobox width="98px"
+										value="@load(vm.atividade.geraCertificado ? 'SIM' : 'NÃO')"
+										selectedItem="@save(vm.atividade.geraCertificado)">
+										<comboitem label="SIM"
+											value="true" />
+										<comboitem label="NÃO"
+											value="false" />
+									</combobox>
+								</vlayout>
+							</hlayout>
+						</vlayout>
+
+						<vlayout spacing="7px">
+							<hlayout spacing="10px">
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="Data início:"
+											style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<datebox format="dd/MM/yyyy"
+										onChange="@command('carregarListaDeDias')"
+										placeholder="dd/mm/aaaa" maxlength="10"
+										value="@bind(vm.atividade.dataInicio)" />
+								</vlayout>
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="Data fim:"
+											style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<datebox format="dd/MM/yyyy"
+										onChange="@command('carregarListaDeDias')"
+										placeholder="dd/mm/aaaa" maxlength="10"
+										value="@bind(vm.atividade.dataFim)" />
+								</vlayout>
+							</hlayout>
+							<hbox spacing="10px" align="center">
+								<combobutton
+									label="Selecionar dias da atividade">
+									<popup>
+										<checkbox
+											label="Distribuir carga horária automaticamente"
+											checked="@load(vm.distribuirHorasAutomatico)"
+											onCheck="@command('distribuirHorasAutomatico', zerarIntervalos=true)" />
+
+										<separator />
+										<grid model="@bind(vm.dias)"
+											emptyMessage="Escolha a data início e data fim" mold="paging"
+											pageSize="5" width="550px">
+											<columns>
+												<column label="Dia"
+													align="center" width="250px" />
+												<column label="Horas"
+													align="center" />
+												<column
+													label="Selecionar" align="center" />
+											</columns>
+											<template name="model"
+												var="dia">
+												<row>
+													<label
+														value="@load(dia.dataStr)" />
+													<timebox
+														instant="true"
+														onChange="@command('distribuirHorasAutomatico', zerarIntervalos=false)"
+														value="@bind(dia.quantidadeHoras)" format="HH:mm"
+														placeholder="hh:mm" />
+													<checkbox
+														checked="@load(dia.selecionado)"
+														onCheck="@command('selecionaDia', dia=dia)" />
+												</row>
+											</template>
+										</grid>
+									</popup>
+								</combobutton>
+								<image style="cursor:pointer"
+									popup="intervaloTip" height="15px" src="/imagens/info.png" />
+							</hbox>
+							<hlayout spacing="10px">
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="Hora início:"
+											style="font-weight:bold" />
+										<label value="*"
+											visible="@load(!vm.atividadeEAD)"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<timebox format="HH:mm" cols="11"
+										placeholder="hh:mm" maxlength="10"
+										value="@bind(vm.atividade.horaInicio)" />
+								</vlayout>
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="Hora fim:"
+											style="font-weight:bold" />
+										<label value="*"
+											visible="@load(!vm.atividadeEAD)"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<timebox format="HH:mm" cols="11"
+										placeholder="hh:mm" maxlength="10"
+										value="@bind(vm.atividade.horaFim)" />
+								</vlayout>
+							</hlayout>
+							<vlayout spacing="1px">
+								<hlayout spacing="0px">
+									<label value="Local:"
+										style="font-weight:bold" />
+									<label value="*"
+										visible="@load(!vm.atividadeEAD)"
+										style="font-weight:bold; color:#992536" />
+								</hlayout>
+								<textbox
+									value="@bind(vm.atividade.local)"
+									onChange="self.setValue(self.getValue().toUpperCase().trim());"
+									width="350px" />
+							</vlayout>
+							<vlayout spacing="1px">
+								<hlayout spacing="0px">
+									<label value="Logradouro:"
+										style="font-weight:bold" />
+									<label value="*"
+										visible="@load(!vm.atividadeEAD)"
+										style="font-weight:bold; color:#992536" />
+								</hlayout>
+								<textbox
+									value="@bind(vm.atividade.logradouro)"
+									onChange="self.setValue(self.getValue().toUpperCase().trim());"
+									width="350px" />
+							</vlayout>
+							<hlayout spacing="10px">
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="Bairro:"
+											style="font-weight:bold" />
+										<label value="*"
+											visible="@load(!vm.atividadeEAD)"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<textbox
+										value="@bind(vm.atividade.bairro)"
+										onChange="self.setValue(self.getValue().toUpperCase().trim());" />
+								</vlayout>
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="Número:"
+											style="font-weight:bold" />
+										<label value="*"
+											visible="@load(!vm.atividadeEAD)"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<textbox
+										value="@bind(vm.atividade.numero)"
+										onChange="self.setValue(self.getValue().toUpperCase().trim());"
+										width="100px" />
+								</vlayout>
+							</hlayout>
+							<hlayout spacing="10px">
+								<vlayout spacing="1px">
+									<label value="Complemento:"
+										style="font-weight:bold" />
+									<textbox
+										value="@bind(vm.atividade.complemento)"
+										onChange="self.setValue(self.getValue().toUpperCase().trim());" />
+								</vlayout>
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="CEP:"
+											style="font-weight:bold" />
+										<label value="*"
+											visible="@load(!vm.atividadeEAD)"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<textbox
+										value="@bind(vm.atividade.cep)" width="100px"
+										w:onBind="jq(this).mask('99999-999');" />
+								</vlayout>
+							</hlayout>
+							<vlayout spacing="1px">
+								<hlayout spacing="0px">
+									<label value="Estado:"
+										style="font-weight:bold" />
+									<label value="*"
+										visible="@load(!vm.atividadeEAD)"
+										style="font-weight:bold; color:#992536" />
+								</hlayout>
+								<combobox
+									onSelect="@command('carregarListaPorEstado')"
+									model="@bind(vm.estados)" autocomplete="true"
+									selectedItem="@bind(vm.atividade.estado)">
+									<template name="model"
+										var="estado">
+										<comboitem
+											label="@load(estado.nome)" value="@load(estado)" />
+									</template>
+								</combobox>
+							</vlayout>
+							<vlayout spacing="1px">
+								<hlayout spacing="0px">
+									<label value="Município:"
+										style="font-weight:bold" />
+									<label value="*"
+										visible="@load(!vm.atividadeEAD)"
+										style="font-weight:bold; color:#992536" />
+								</hlayout>
+								<combobox id="comboMunicipios"
+									model="@bind(vm.municipios)" autocomplete="true"
+									selectedItem="@bind(vm.atividade.municipio)" width="280px">
+									<template name="model"
+										var="municipio">
+										<comboitem
+											label="@load(municipio.nome)" value="@load(municipio)" />
+									</template>
+								</combobox>
+							</vlayout>
+						</vlayout>
+
+						<vlayout spacing="7px">
+							<vlayout spacing="1px">
+								<hlayout spacing="0px">
+									<label
+										value="Data início das pré-inscrições:"
+										style="font-weight:bold" />
+									<label value="*"
+										style="font-weight:bold; color:#992536" />
+								</hlayout>
+								<datebox format="dd/MM/yyyy"
+									placeholder="dd/mm/aaaa" maxlength="10"
+									value="@bind(vm.atividade.preInscricaoDataInicio)" />
+							</vlayout>
+							<vlayout spacing="1px">
+								<hlayout spacing="0px">
+									<label
+										value="Data fim das pré-inscrições:" style="font-weight:bold" />
+									<label value="*"
+										style="font-weight:bold; color:#992536" />
+								</hlayout>
+								<datebox format="dd/MM/yyyy"
+									placeholder="dd/mm/aaaa" maxlength="10"
+									value="@bind(vm.atividade.preInscricaoDataFim)" />
+							</vlayout>
+							<vlayout spacing="1px">
+								<label value="Conteúdo programático:"
+									style="font-weight:bold" />
+								<textbox rows="4" cols="40"
+									width="350px" value="@bind(vm.atividade.conteudoProgramatico)"
+									onChange="self.setValue(self.getValue().toUpperCase().trim());" />
+							</vlayout>
+							<vlayout spacing="1px">
+								<label value="Módulos:"
+									style="font-weight:bold" />
+								<textbox rows="4" cols="40"
+									width="350px" value="@bind(vm.atividade.modulos)"
+									onChange="self.setValue(self.getValue().toUpperCase().trim());" />
+							</vlayout>
+							<vlayout spacing="1px">
+								<label value="Observações:"
+									style="font-weight:bold" />
+								<textbox rows="2" cols="40"
+									width="350px" value="@bind(vm.atividade.observacoes)"
+									onChange="self.setValue(self.getValue().toUpperCase().trim());" />
+							</vlayout>
+
+							<separator />
+							<button tooltiptext="Criar atividade"
+								style="font-weight:bold" label="CRIAR ATIVIDADE"
+								onClick="@command('abrirModalConfirmaCriarAtividade', visible=true)" />
+						</vlayout>
+					</hlayout>
+				</vlayout>
+			</panelchildren>
+		</panel>
+
+		<window id="modalConfirmacaoVagas" mode="modal"
+			visible="false">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true"
+					value="Deseja limitar as vagas por tipo de participante?" />
+
+				<separator />
+				<hlayout>
+					<button label="Sim"
+						onClick="@command('gerenciarQuantidadeDeVagas')" />
+					<button label="Não"
+						onClick="@command('abrirModalConfirmaGerenciarVagas', visible=false)" />
+				</hlayout>
+			</vbox>
+		</window>
+
+		<window id="modalConfirmacao" mode="modal" visible="false">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true"
+					value="Confirma a criação dessa atividade?" />
+
+				<separator />
+				<hlayout>
+					<button label="Sim"
+						onClick="@command('criarAtividade')" />
+					<button label="Não"
+						onClick="@command('abrirModalConfirmaCriarAtividade', visible=false)" />
+				</hlayout>
+			</vbox>
+		</window>
+	</window>
+
+	<popup id="intervaloTip" width="350px">
+		<vbox>
+			Defina a carga horária e datas início e fim e as horas por
+			dia serão igualmente distribuídas automaticamente.
+		</vbox>
+	</popup>
+</zk>

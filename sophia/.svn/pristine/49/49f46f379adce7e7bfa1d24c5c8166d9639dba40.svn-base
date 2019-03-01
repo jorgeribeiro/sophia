@@ -1,0 +1,66 @@
+<zk>
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.client.pages.ParticipantesVM')">
+		<panel title="Outras capacitações" border="normal">
+			<panelchildren>
+				<vlayout>
+					<vlayout spacing="1px">
+						<label
+							value="Aqui serão listadas capacitações não gerenciadas pela Escola Superior de Controle Externo." />
+						<label
+							value="Caso deseje incluir alguma capacitação, apresente o certificado de conclusão à secretaria da ESCEX." />
+					</vlayout>
+					<grid model="@bind(vm.capacitacoesServidor)"
+						mold="paging" pageSize="4"
+						onCreate="@command('carregarCapacitacoesPorParticipante')"
+						emptyMessage="Sem itens encontrados.">
+						<columns>
+							<column sort="auto(nomeCapacitacao)"
+								label="Nome" />
+							<column align="center"
+								sort="auto(instituicaoProvedora)" label="Instituição provedora" />
+							<column align="center" width="200px"
+								label="Período" />
+							<column align="center" width="150px"
+								label="Carga horária" />
+						</columns>
+						<template name="model" var="capacitacao">
+							<row>
+								<label style="font-weight:bold"
+									value="@load(capacitacao.nomeCapacitacao)" />
+								<label
+									value="@load(capacitacao.instituicaoProvedora)" />
+								<label
+									value="@load(capacitacao.dataStr)" />
+								<label
+									value="@load(capacitacao.cargaHorariaStr)" />
+							</row>
+						</template>
+						<foot>
+							<footer span="4"
+								label="@load(vm.textoRodape)" />
+						</foot>
+					</grid>
+				</vlayout>
+			</panelchildren>
+		</panel>
+
+		<window id="modalCancelarInscricao" mode="modal"
+			visible="false">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true"
+					value="Deseja cancelar definitivamente essa inscrição?" />
+
+				<separator />
+				<hlayout>
+					<button id="buttonNao" label="Não"
+						onClick="@command('abrirModalCancelarPreInscricao', participanteInscrito=null, visible=false)" />
+					<button id="buttonCancelarInsc"
+						label="Cancelar inscrição"
+						autodisable="buttonCancelarInsc, buttonNao"
+						onClick="@command('cancelarPreInscricao')" />
+				</hlayout>
+			</vbox>
+		</window>
+	</window>
+</zk>

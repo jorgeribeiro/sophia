@@ -1,0 +1,99 @@
+<zk>
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.client.pages.EventosVM')">
+		<panel title="Meus eventos" border="normal">
+			<panelchildren>
+				<vlayout>
+					<hbox align="center">
+						<textbox placeholder="Filtrar por evento"
+							instant="true" width="405px"
+							value="@bind(vm.filtroEvento.filtro1)"
+							onChange="@command('aplicarFiltro')" />
+						<textbox placeholder="Filtrar por atividade"
+							instant="true" width="240px"
+							value="@bind(vm.filtroEvento.filtro2)"
+							onChange="@command('aplicarFiltro')" />
+						<button label="Limpar filtro"
+							onClick="@command('limparFiltro')" />
+					</hbox>
+					<grid model="@bind(vm.inscricoes)" mold="paging"
+						pageSize="4" onCreate="@command('carregarEventosPorParticipante')"
+						emptyMessage="Sem itens encontrados.">
+						<columns>
+							<column sort="auto(atividade.evento.nome)"
+								label="Evento" />
+							<column align="center"
+								sort="auto(atividade.nome)" label="Atividade" />
+							<column align="center" width="150px"
+								label="Data" />
+							<column align="center" width="170px"
+								label="Inscrição aprovada" />
+							<column align="center" width="120px"
+								label="Material" />
+							<column align="center" width="200px"
+								label="Certificado disponível" />
+						</columns>
+						<template name="model"
+							var="participanteInscrito">
+							<row>
+								<label style="font-weight:bold"
+									value="@load(participanteInscrito.atividade.evento.nomeStr)" />
+								<label
+									value="@load(participanteInscrito.atividade.nomeStr)" />
+								<label
+									value="@load(participanteInscrito.atividade.dataStr)" />
+								<label
+									value="@load(participanteInscrito.inscricaoAprovadaStr)" />
+								<button
+									tooltiptext="Clique aqui para fazer o download do material"
+									onClick="@command('abrirModalVisualizarMaterial', visible = true, atividade = participanteInscrito.atividade)"
+									iconSclass="z-icon-bars" height="40px" />
+								<label
+									value="@load(participanteInscrito.certificadoDisponivelStr)" />
+							</row>
+						</template>
+						<foot>
+							<footer span="6"
+								label="@load(vm.textoRodape)" />
+						</foot>
+					</grid>
+				</vlayout>
+			</panelchildren>
+		</panel>
+		
+		<window id="modalVisualizarMaterial" mode="modal"
+			visible="false">
+			<vbox align="left" style="padding:15px">
+				<label value="@load(vm.atividadeSelecionada.nomeStr)"
+					sclass="custom-title" />
+
+				<grid model="@bind(vm.arquivos)"
+					emptyMessage="Nenhum arquivo adicionado" mold="paging"
+					width="950px" pageSize="4">
+
+					<columns>
+						<column label="Arquivos" />
+						<column label="Descrição" />
+						<column label="Download" align="center"
+							width="150px" />
+					</columns>
+					<template name="model" var="arquivo">
+						<row>
+							<label value="@load(arquivo.nome)" />
+							<label value="@load(arquivo.descricao)" />
+							<button
+								tooltiptext="Clique aqui para fazer o download do arquivo"
+								onClick="@command('downloadArquivo', arquivo=arquivo)"
+								iconSclass="z-icon-download" height="40px" />
+						</row>
+					</template>
+				</grid>
+				<div align="center">
+					<button label="Fechar"
+						onClick="@command('abrirModalVisualizarMaterial', visible = false, atividade=null)" />
+				</div>
+			</vbox>
+		</window>
+		
+	</window>
+</zk>

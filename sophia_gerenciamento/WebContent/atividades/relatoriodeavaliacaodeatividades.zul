@@ -1,0 +1,251 @@
+<zk>
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.gerenciamento.pages.AtividadesVM')">
+		<panel title="Relatório de avaliação de reação de atividades"
+			border="normal">
+			<panelchildren>
+				<vlayout>
+					<hlayout spacing="7px">
+						<vlayout spacing="1px">
+							<label value="Eventos realizados:"
+								style="font-weight:bold" />
+							<hbox align="center">
+								<combobox id="comboEventos" focus="true"
+									model="@bind(vm.eventosRealizados)" autocomplete="true"
+									width="400px" onSelect="@command('carregarListaPorEvento')"
+									selectedItem="@bind(vm.eventoSelecionado)">
+									<template name="model"
+										var="evento">
+										<comboitem
+											label="@load(evento.nome)" value="@load(evento)" />
+									</template>
+								</combobox>
+
+							</hbox>
+						</vlayout>
+					</hlayout>
+					<vlayout spacing="1px">
+						<label value="Atividade(s):"
+							style="font-weight:bold" />
+						<grid model="@bind(vm.atividades)"
+							emptyMessage="Sem atividades encontradas" mold="paging"
+							pageSize="4">
+							<columns>
+								<column
+									label="Informações da atividade" />
+								<column label="Avaliação Geral"
+									align="center" width="200px" />
+								<column
+									label="Avaliação por participante" align="center"
+									width="250px" />
+							</columns>
+							<template name="model" var="atividade">
+								<row>
+									<vlayout spacing="1px">
+										<label
+											value="@load(atividade.nomeStr)"
+											style="font-size:18px; font-weight:bold" />
+										<hlayout spacing="5px">
+											<hlayout>
+												<label
+													value="Data início:" style="font-weight:bold" />
+												<label
+													value="@load(atividade.dataInicioStr)" />
+											</hlayout>
+											<hlayout>
+												<label value="Data fim:"
+													style="font-weight:bold" />
+												<label
+													value="@load(atividade.dataFimStr)" />
+											</hlayout>
+										</hlayout>
+										<hlayout spacing="5px">
+											<hlayout>
+												<label
+													value="Hora início:" style="font-weight:bold" />
+												<label
+													value="@load(atividade.horaInicioStr)" />
+											</hlayout>
+											<hlayout>
+												<label value="Hora fim:"
+													style="font-weight:bold" />
+												<label
+													value="@load(atividade.horaFimStr)" />
+											</hlayout>
+										</hlayout>
+									</vlayout>
+									<button
+										tooltiptext="Clique para gerar o relatório de avaliação dessa atividade"
+										onClick="@command('abrirModalVisualizaRelatorioAvaliacaoDeReacao', atividade = atividade, visible=true)"
+										iconSclass="z-icon-download" height="40px" />
+
+									<button
+										tooltiptext="Clique para ver a lista dos participantes que avaliaram essa atividade"
+										onClick="@command('abrirModalDeAvaliacaoDeReacao', atividade = atividade, visible=true)"
+										iconSclass="z-icon-bars" height="40px" />
+								</row>
+							</template>
+						</grid>
+					</vlayout>
+				</vlayout>
+			</panelchildren>
+		</panel>
+		
+		<window id="modalAvaliacaoDeReacao" mode="modal" visible="false"
+			onCancel="@command('abrirModalDeAvaliacaoDeReacao', atividade = null, visible=false)">
+
+			<vbox align="left" style="padding:15px">
+				<label value="Avaliação de Reação"
+					sclass="custom-title" />
+
+				<vlayout spacing="1px">
+					<hlayout spacing="5px">
+						<label style="font-weight:bold"
+							value="EVENTO: " />
+						<label
+							value="@bind(vm.atividadeAvaliada.evento.nomeStr)" />
+					</hlayout>
+					<hlayout spacing="5px">
+						<label style="font-weight:bold" value="CURSO: " />
+						<label
+							value="@bind(vm.atividadeAvaliada.nomeStr)" />
+					</hlayout>
+					<hlayout spacing="5px">
+						<label style="font-weight:bold"
+							value="PERÍODO: " />
+						<label
+							value="@bind(vm.atividadeAvaliada.dataStr)" />
+					</hlayout>
+				</vlayout>
+
+				<grid width="950px" model="@bind(vm.avaliacoesReacao)"
+					mold="paging" pageSize="4"
+					emptyMessage="Sem avaliações preenchidas.">
+					<columns>
+						<column label="Participante(s)" />
+						<column align="center" width="200px"
+							label="Visualizar Avaliação" />
+					</columns>
+					<template name="model" var="avaliacaoReacao">
+
+						<row>
+							<label
+								value="@load(avaliacaoReacao.participanteInscrito.participante.nome)" />
+
+							<button
+								tooltiptext="Clique para ver a avaliação desse participante"
+								iconSclass="z-icon-bars" height="40px"
+								onClick="@command('abrirModalAvaliacaoDeReacaoIndividual', avaliacaoReacao = avaliacaoReacao,
+							 	 visible = true)" />
+						</row>
+					</template>
+				</grid>
+				<div align="center">
+					<button label="Fechar"
+						onClick="@command('abrirModalDeAvaliacaoDeReacao', atividade = null, visible = false)" />
+				</div>
+			</vbox>
+		</window>
+		
+		<window id="modalAvaliacaoDeReacaoIndividual" mode="modal"
+			visible="false"
+			onCancel="@command('abrirModalAvaliacaoDeReacaoIndividual', avaliacaoReacao = null ,
+			visible=false)">
+
+			<vbox align="left" style="padding:15px">
+				<label value="Avaliação de Reação Individual"
+					sclass="custom-title" />
+
+				<vlayout spacing="1px">
+					<hlayout spacing="5px">
+						<label style="font-weight:bold"
+							value="PARTICIPANTE: " />
+						<label
+							value="@bind(vm.avaliacaoReacao.participanteInscrito.participante.nome)" />
+					</hlayout>
+
+					<hlayout spacing="5px">
+						<label style="font-weight:bold" value="MÉDIA: " />
+						<label value="@bind(vm.avaliacaoReacao.media)" />
+					</hlayout>
+
+					<hlayout spacing="5px">
+						<label style="font-weight:bold"
+							value="LEGENDA: " />
+						<label value="@bind(vm.legenda)" />
+					</hlayout>
+				</vlayout>
+
+				<grid width="950px">
+					<columns>
+						<column label="Questões" />
+						<column align="center" width="200px"
+							label="Avaliação" />
+					</columns>
+					<rows>
+						<row>
+							<label value="CONTEÚDO DO CURSO" />
+							<label
+								value="@load(vm.avaliacaoReacao.conteudoCurso)" />
+						</row>
+
+						<row>
+							<label value="TEMPO DE DURAÇÃO X CONTEÚDO" />
+							<label
+								value="@load(vm.avaliacaoReacao.tempoConteudo)" />
+						</row>
+
+						<row>
+							<label
+								value="METODOLOGIA (DIDÁTICA) DO INSTRUTOR" />
+							<label
+								value="@load(vm.avaliacaoReacao.metodologia)" />
+						</row>
+
+						<row>
+							<label
+								value="DOMÍNIO DO CONTEÚDO PELO INSTRUTOR" />
+							<label
+								value="@load(vm.avaliacaoReacao.dominioInstrutor)" />
+						</row>
+
+						<row>
+							<label value="MATERIAL DIDÁTICO" />
+							<label
+								value="@load(vm.avaliacaoReacao.materialDidatico)" />
+						</row>
+
+						<row>
+							<label value="APOIO INSTITUCIONAL" />
+							<label
+								value="@load(vm.avaliacaoReacao.apoioInstitucional)" />
+						</row>
+
+						<row>
+							<label value="CUMPRIU O CONTEÚDO" />
+							<label
+								value="@load(vm.avaliacaoReacao.cumpriuConteudoStr)" />
+						</row>
+
+					</rows>
+
+				</grid>
+				<div align="center">
+					<button label="Fechar"
+						onClick="@command('abrirModalAvaliacaoDeReacaoIndividual', avaliacaoReacao = null, visible=false)" />
+				</div>
+			</vbox>
+		</window>
+
+		<window id="modalVisualizaRelatorioAvaliacaoDeReacao"
+			mode="modal" visible="false">
+			<vbox align="center" style="padding:15px">
+				<iframe id="iframeAvaliacaoReacao" width="1000px"
+					height="500px" />
+				<button tooltiptext="Fechar" style="font-weight:bold"
+					label="FECHAR"
+					onClick="@command('abrirModalVisualizaRelatorioAvaliacaoDeReacao', visible=false)" />
+			</vbox>
+		</window>
+	</window>
+</zk>

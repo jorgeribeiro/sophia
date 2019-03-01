@@ -1,0 +1,215 @@
+<zk>
+	<script type="text/javascript" src="/js/jquery.maskedinput.js" />
+	<script type="text/javascript">
+		$.mask.definitions['A']='[A-Z]';
+		$.mask.definitions['d']='[0123]';
+		$.mask.definitions['m']='[01]'; $.mask.definitions['y']='[12]';
+	</script>
+
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.gerenciamento.pages.ColaboradoresVM')">
+		<panel title="Gerenciar colaboradores" border="normal">
+			<panelchildren>
+				<vlayout>
+					<hbox>
+						<textbox placeholder="Filtrar por nome"
+							instant="true" width="400px"
+							value="@bind(vm.filtroColaborador.filtro1)"
+							onChange="@command('aplicarFiltro')" />
+						<textbox placeholder="Filtrar por email"
+							instant="true" width="345px"
+							value="@bind(vm.filtroColaborador.filtro2)"
+							onChange="@command('aplicarFiltro')" />
+						<button label="Limpar filtro"
+							onClick="@command('limparFiltro')" />
+					</hbox>
+					<grid model="@bind(vm.colaboradores)" mold="paging"
+						pageSize="5" emptyMessage="Sem colaboradores encontrados.">
+						<columns>
+							<column
+								sort="auto(pessoa.nome)" label="Nome" />
+							<column align="center"
+								sort="auto(pessoa.email)" label="E-mail" />
+							<column align="center" width="200px"
+								sort="auto(statusCadastro)" label="Status do cadastro" />
+							<column align="center" width="170px"
+								label="Download currículo" />
+							<column align="center" width="100px" label="Atualizar" />
+						</columns>
+						<template name="model" var="colaborador">
+							<row>
+								<label style="font-weight:bold"
+									value="@load(colaborador.pessoa.nome)" />
+								<label
+									value="@load(colaborador.pessoa.email)" />
+								<label
+									value="@load(colaborador.statusCadastroStr)" />
+								<button
+									tooltiptext="Clique para baixar o currículo desse colaborador"
+									onClick="@command('downloadCurriculo', colaborador=colaborador)"
+									iconSclass="z-icon-download" height="40px" />
+								<button
+									tooltiptext="Clique para atualizar informações desse colaborador"
+									onClick="@command('abrirModalAtualizarColaborador', colaborador=colaborador, visible=true)"
+									iconSclass="z-icon-edit" height="40px" />
+							</row>
+						</template>
+						<foot>
+							<footer span="5"
+								label="@load(vm.textoRodape)" />
+						</foot>
+					</grid>
+				</vlayout>
+			</panelchildren>
+		</panel>
+
+		<window id="modalAtualizarColaborador" mode="modal"
+			visible="false">
+			<vbox align="left" style="padding:15px">
+				<label value="Atualizar colaborador"
+					sclass="custom-title" />
+				<hlayout spacing="15px">
+					<vlayout spacing="7px">
+						<vlayout spacing="1px">
+							<label value="Nome:"
+								style="font-weight:bold" />
+							<label
+								value="@load(vm.colaboradorSelecionado2.pessoa.nome)" />
+						</vlayout>
+						<vlayout spacing="1px">
+							<label value="E-mail:"
+								style="font-weight:bold" />
+							<label
+								value="@load(vm.colaboradorSelecionado2.pessoa.email)" />
+						</vlayout>
+						<vlayout spacing="1px">
+							<hlayout spacing="0px">
+								<label value="Escolaridade:"
+									style="font-weight:bold" />
+								<label value="*"
+									style="font-weight:bold; color:#992536" />
+							</hlayout>
+							<combobox autocomplete="true" width="300px"
+								selectedItem="@bind(vm.colaboradorSelecionado2.escolaridade)">
+								<comboitem label="ENSINO FUNDAMENTAL"
+									value="ENSINO FUNDAMENTAL" />
+								<comboitem label="ENSINO MÉDIO"
+									value="ENSINO MÉDIO" />
+								<comboitem label="ENSINO SUPERIOR"
+									value="ENSINO SUPERIOR" />
+								<comboitem label="ESPECIALIZAÇÃO"
+									value="ESPECIALIZAÇÃO" />
+								<comboitem label="MESTRADO"
+									value="MESTRADO" />
+								<comboitem label="DOUTORADO"
+									value="DOUTORADO" />
+								<comboitem label="PÓS-DOUTORADO"
+									value="PÓS-DOUTORADO" />
+								<comboitem label="MBA" value="MBA" />
+							</combobox>
+						</vlayout>
+						<vlayout spacing="1px"
+							visible="@load(not empty vm.colaboradorSelecionado2.escolaridade and vm.colaboradorSelecionado2.escolaridade ne 'ENSINO FUNDAMENTAL' and vm.colaboradorSelecionado2.escolaridade ne 'ENSINO MÉDIO')">
+							<hlayout spacing="0px">
+								<label value="Formação acadêmica:"
+									style="font-weight:bold" />
+								<label value="*"
+									style="font-weight:bold; color:#992536" />
+							</hlayout>
+							<combobox id="comboFormacoesAcademicas"
+								width="300px" autocomplete="true"
+								model="@bind(vm.formacoesAcademicas)"
+								selectedItem="@bind(vm.colaboradorSelecionado2.formacaoAcademica)"
+								value="@load(vm.colaboradorSelecionado2.formacaoAcademica.nome)"
+								readonly="true">
+								<template name="model"
+									var="formacaoAcademica">
+									<comboitem
+										label="@load(formacaoAcademica.nome)"
+										value="@load(formacaoAcademica)" />
+								</template>
+							</combobox>
+						</vlayout>
+						<vlayout spacing="1px">
+							<label value="Currículo:"
+								style="font-weight:bold" />
+							<hbox align="center">
+								<button label="Carregar currículo"
+									upload="true,maxsize=10240,accept=.pdf"
+									onUpload="@command('uploadCurriculo', upEvent=event)" />
+								<image style="cursor:pointer"
+									popup="uploadTip" height="15px" src="/imagens/info.png" />
+							</hbox>
+							<label multiline="true"
+								value="@bind(vm.media eq null ? '' : vm.media.name)" />
+						</vlayout>
+					</vlayout>
+
+					<vlayout spacing="7px">
+						<vlayout spacing="1px">
+							<label value="Perfil:"
+								style="font-weight:bold" />
+							<textbox rows="6" cols="30"
+								value="@bind(vm.colaboradorSelecionado2.perfil)" />
+						</vlayout>
+
+						<vlayout spacing="1px">
+							<label value="Observação:"
+								style="font-weight:bold" />
+							<textbox rows="6" cols="30"
+								value="@bind(vm.colaboradorSelecionado2.observacao)" />
+						</vlayout>
+					</vlayout>
+
+					<vlayout spacing="1px">
+						<label value="Status do cadastro:"
+							style="font-weight:bold" />
+						<combobox autocomplete="true"
+							value="Aguardando confirmação"
+							selectedItem="@bind(vm.colaboradorSelecionado2.statusCadastro)">
+							<comboitem label="Confirmado" value="2" />
+							<comboitem label="Desativado" value="3" />
+						</combobox>
+					</vlayout>
+				</hlayout>
+
+				<separator height="10px" />
+				<div align="center">
+					<hbox>
+						<button tooltiptext="Fechar"
+							style="font-weight:bold" label="FECHAR"
+							onClick="@command('abrirModalAtualizarColaborador', colaborador=null, visible=false)" />
+						<button tooltiptext="Salvar alterações"
+							style="font-weight:bold"
+							label="SALVAR ALTERAÇÕES" image="imagens/save.png"
+							onClick="@command('abrirModalConfirmaAtualizarColaborador', visible=true)" />
+					</hbox>
+				</div>
+			</vbox>
+		</window>
+
+		<window id="modalConfirmacao" mode="modal" visible="false">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true"
+					value="Confirma a atualização desse colaborador?" />
+
+				<separator />
+				<hlayout>
+					<button id="buttonSim" label="Sim"
+						onClick="@command('atualizarColaborador')"
+						autodisable="buttonSim, buttonNao" />
+					<button id="buttonNao" label="Não"
+						onClick="@command('abrirModalConfirmaAtualizarColaborador', visible=false)" />
+				</hlayout>
+			</vbox>
+		</window>
+	</window>
+
+	<popup id="uploadTip" width="290px">
+		<vbox>
+			Apenas o formato pdf é aceito. Tamanho máximo de arquivo
+			10mb.
+		</vbox>
+	</popup>
+
+</zk>

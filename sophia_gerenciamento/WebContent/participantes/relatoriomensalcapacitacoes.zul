@@ -1,0 +1,56 @@
+<zk>
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.gerenciamento.pages.ParticipantesVM')">
+		<panel title="Relatório mensal de capacitação de servidores"
+			border="normal">
+			<panelchildren>
+				<vlayout>
+					<hlayout spacing="7px">
+						<vlayout spacing="1px">
+							<label value="Mês:"
+								style="font-weight:bold" />
+							<combobox id="comboMes" autocomplete="true"
+								width="200px" focus="true"
+								selectedItem="@bind(vm.mesRelatorio)">
+								<comboitem label="Janeiro" value="1" />
+								<comboitem label="Fevereiro" value="2" />
+								<comboitem label="Março" value="3" />
+								<comboitem label="Abril" value="4" />
+								<comboitem label="Maio" value="5" />
+								<comboitem label="Junho" value="6" />
+								<comboitem label="Julho" value="7" />
+								<comboitem label="Agosto" value="8" />
+								<comboitem label="Setembro" value="9" />
+								<comboitem label="Outubro" value="10" />
+								<comboitem label="Novembro" value="11" />
+								<comboitem label="Dezembro" value="12" />
+							</combobox>
+						</vlayout>
+						<vlayout spacing="1px">
+							<label value="Ano:"
+								style="font-weight:bold" />
+							<intbox maxlength="4"
+								value="@bind(vm.anoRelatorio)" />
+						</vlayout>
+					</hlayout>
+
+					<separator />
+					<button label="Gerar relatório" dir="reverse"
+						iconSclass="z-icon-arrow-circle-right"
+						onClick="@command('abrirModalRelatorioMensal', mes=comboMes.selectedItem.label, visible=true)" />
+				</vlayout>
+			</panelchildren>
+		</panel>
+
+		<window id="modalRelatorioMensal" mode="modal"
+			visible="false">
+			<vbox align="center" style="padding:15px">
+				<iframe id="iframeRelatorioMensal" width="1000px"
+					height="500px" />
+				<button tooltiptext="Fechar" style="font-weight:bold"
+					label="FECHAR"
+					onClick="@command('abrirModalRelatorioMensal', mes=null, visible=false)" />
+			</vbox>
+		</window>
+	</window>
+</zk>

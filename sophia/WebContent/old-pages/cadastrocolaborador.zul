@@ -1,0 +1,251 @@
+<?page title="SIGESCO - Ficha Cadastral" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:w="client">
+
+	<?link rel="shortcut icon" type="image/x-icon" href="imagens/SIGESCO_logo.png"?>
+	<script type="text/javascript" src="/js/jquery.maskedinput.js" />
+	<script type="text/javascript">
+		$.mask.definitions['A']='[A-Z]';
+		$.mask.definitions['d']='[0123]';
+		$.mask.definitions['m']='[01]'; $.mask.definitions['y']='[12]';
+	</script>
+
+	<borderlayout id="winCadastro" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init('br.gov.ma.tce.sigesco.client.pages.CadastroColaboradorVM')">
+		<north border="none">
+			<div height="95px" width="100%">
+				<image src="imagens/fundotcegrande.jpg" />
+			</div>
+		</north>
+		<center id="mainContent"
+			style="border-color:black; border-style:solid; 
+				border-width:0px 0px 0px 0px; overflow:auto; overflow-x:hidden;">
+			<div id="divCentral" width="100%" align="center">
+
+				<!-- CONTEÚDO MAIN -->
+				<groupbox id="boxContent" closable="false"
+					width="650px">
+					<caption style="font-weight:bold;"
+						label="SIGESCO - Ficha Cadastral de Colaborador" />
+					<grid style="border:none">
+						<columns visible="false">
+							<column width="150px" label="" />
+							<column width="310px" label="" />
+						</columns>
+						<rows>
+							<row>
+								<label style="font-weight:bold;"
+									value="Nome:" />
+								<textbox id="txtNome"
+									value="@bind(vm.colaborador.nome)"
+									onChange="self.setValue(self.getValue().toUpperCase().trim());"
+									width="300px" focus="true" />
+							</row>
+							<row>
+								<label style="font-weight:bold;"
+									value="CPF:" />
+								<textbox id="txtCpf"
+									value="@bind(vm.colaborador.cpf)"
+									w:onBind="jq(this).mask('999.999.999-99');" />
+							</row>
+							<row>
+								<label style="font-weight:bold;"
+									value="Sexo:" />
+								<combobox id="comboSexo"
+									selectedItem="@bind(vm.colaborador.sexo)">
+									<comboitem id="comboSexo1"
+										label="MASCULINO" value="MASCULINO" />
+									<comboitem id="comboSexo2"
+										label="FEMININO" value="FEMININO" />
+								</combobox>
+							</row>
+							<row>
+								<label style="font-weight:bold;"
+									value="Telefone fixo:" />
+								<textbox id="txtTelFixo"
+									value="@bind(vm.colaborador.telFixo)"
+									w:onBind="jq(this).mask('(99)9999-9999');" />
+							</row>
+							<row>
+								<label style="font-weight:bold;"
+									value="Telefone celular:" />
+								<textbox id="txtTelCelular"
+									value="@bind(vm.colaborador.telCelular)"
+									w:onBind="jq(this).mask('(99)99999-9999');" />
+							</row>
+							<row>
+								<label style="font-weight:bold;"
+									value="Telefone comercial:" />
+								<textbox id="txtTelComercial"
+									value="@bind(vm.colaborador.telComercial)"
+									w:onBind="jq(this).mask('(99)9999-9999');" />
+							</row>
+							<row>
+								<label style="font-weight:bold;"
+									value="Logradouro:" />
+								<textbox id="txtEndereco"
+									value="@bind(vm.colaborador.logradouro)"
+									onChange="self.setValue(self.getValue().toUpperCase().trim());"
+									width="300px" />
+							</row>
+							<row>
+								<label style="font-weight:bold;"
+									value="Número:" />
+								<textbox id="txtNumero"
+									value="@bind(vm.colaborador.numero)"
+									onChange="self.setValue(self.getValue().toUpperCase().trim());"
+									width="300px" />
+							</row>
+							<row>
+								<label style="font-weight:bold;"
+									value="Complemento:" />
+								<textbox id="txtComplemento"
+									value="@bind(vm.colaborador.complemento)"
+									onChange="self.setValue(self.getValue().toUpperCase().trim());"
+									width="300px" />
+							</row>
+							<row>
+								<label style="font-weight:bold;"
+									value="Estado:" />
+								<combobox id="comboEstado"
+									onSelect="@command('carregarListaPorEstado')"
+									model="@bind(vm.estados)" autocomplete="true"
+									selectedItem="@bind(vm.colaborador.estado)">
+									<template name="model"
+										var="estado">
+										<comboitem
+											label="@load(estado.nome)" value="@load(estado)" />
+									</template>
+								</combobox>
+							</row>
+							<row>
+								<label style="font-weight:bold;"
+									value="Município:" />
+								<combobox id="comboMunicipios"
+									model="@bind(vm.municipios)" autocomplete="true"
+									selectedItem="@bind(vm.colaborador.municipio)" width="300px">
+									<template name="model"
+										var="municipio">
+										<comboitem
+											label="@load(municipio.nome)" value="@load(municipio)" />
+									</template>
+								</combobox>
+							</row>
+							<row>
+								<label style="font-weight:bold;"
+									value="Bairro:" />
+								<textbox id="txtBairro"
+									value="@bind(vm.colaborador.bairro)"
+									onChange="self.setValue(self.getValue().toUpperCase().trim());"
+									width="300px" />
+							</row>
+							<row>
+								<label style="font-weight:bold;"
+									value="CEP:" />
+								<textbox id="txtCep"
+									value="@bind(vm.colaborador.cep)" width="125px"
+									w:onBind="jq(this).mask('99999-999');" />
+							</row>
+							<row>
+								<label style="font-weight:bold;"
+									value="Data de nascimento:" />
+								<datebox id="txtNascimento"
+									format="dd/MM/yyyy"
+									popup="dateTip, type=toggle, position=after_start" cols="12"
+									placeholder="dd/mm/aaaa" maxlength="10"
+									value="@bind(vm.colaborador.dtNascimento)" />
+							</row>
+							<row>
+								<label style="font-weight:bold;"
+									value="Escolaridade:" />
+								<combobox id="comboEscolaridade"
+									model="@bind(vm.municipios)" autocomplete="true"
+									selectedItem="@bind(vm.colaborador.escolaridade)" width="300px">
+									<template name="model"
+										var="municipio">
+										<comboitem
+											label="@load(municipio.nome)" value="@load(municipio)" />
+									</template>
+								</combobox>
+							</row>
+							<row>
+								<label style="font-weight:bold;"
+									value="Formação Acadêmica:" />
+								<combobox id="comboFormacaoAcademica"
+									width="300px">
+									<template>
+										<comboitem />
+									</template>
+								</combobox>
+							</row>
+							<row valign="top">
+								<label style="font-weight:bold;"
+									value="Perfil:" />
+								<textbox id="txtPerfil" rows="6"
+									cols="40" width="300px" value="@bind(vm.colaborador.perfil)" />
+							</row>
+							<row valign="top">
+								<label style="font-weight:bold;"
+									value="Observação:" />
+								<textbox id="txtObservacao" rows="6"
+									cols="40" width="300px"
+									value="@bind(vm.colaborador.observacao)" />
+							</row>
+							<row valign="top">
+								<label style="font-weight:bold;"
+									value="Currículo:" />
+								<label id="uploadCurriculo"
+									value="Implementar!" />
+							</row>
+							<row>
+								<label style="font-weight:bold;"
+									value="E-mail:" />
+								<textbox id="txtEmail" width="300px"
+									type="email" value="@bind(vm.colaborador.email)" />
+							</row>
+							<row>
+								<label style="font-weight:bold;"
+									value="Repita o e-mail:" />
+								<textbox id="txtRepeteEmail"
+									width="300px" type="email"
+									value="@bind(vm.colaborador.repeteEmail)" />
+							</row>
+							<row>
+								<label style="font-weight:bold;"
+									value="Senha:" />
+								<textbox id="txtSenha" width="300px"
+									type="password" value="@bind(vm.colaborador.senha)" />
+							</row>
+							<row>
+								<label style="font-weight:bold;"
+									value="Repita a senha:" />
+								<textbox id="txtRepeteSenha"
+									width="300px" type="password"
+									value="@bind(vm.colaborador.repeteSenha)" />
+							</row>
+						</rows>
+					</grid>
+
+					<separator />
+					<hbox>
+						<button label="Voltar" width="100px"
+							style="border-radius:0"
+							onClick='Executions.getCurrent().sendRedirect("/login.zul")' />
+						<button style="border-radius:0" width="100px"
+							label="Cadastrar" onClick="@command('cadastrarColaborador')" />
+					</hbox>
+					<separator />
+				</groupbox>
+			</div>
+		</center>
+	</borderlayout>
+
+	<popup id="dateTip" width="300px">
+		<vbox>
+			Você pode apenas digitar a data (ddMMaaaa) sem as barras "/"
+			e seu texto será automaticamente formatado.
+			<label style="font-size:0.8em;"
+				value="Exemplo: 21012010 = 21 de Janeiro de 2010" />
+		</vbox>
+	</popup>
+
+</zk>

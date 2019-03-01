@@ -1,0 +1,283 @@
+<zk xmlns:w="client">
+	<script type="text/javascript" src="/js/jquery.maskedinput.js" />
+	<script type="text/javascript">
+		$.mask.definitions['A']='[A-Z]';
+		$.mask.definitions['d']='[0123]';
+		$.mask.definitions['m']='[01]'; $.mask.definitions['y']='[12]';
+	</script>
+
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.client.pages.MinhaContaVM')">
+		<panel title="Meus dados" border="normal">
+			<panelchildren>
+				<hlayout spacing="15px">
+					<vlayout spacing="1px">
+						<label value="Nome:" style="font-weight:bold" />
+						<label value="@load(vm.participante.nome)" />
+					</vlayout>
+
+					<vlayout spacing="1px">
+						<label value="E-mail:" style="font-weight:bold" />
+						<label value="@load(vm.participante.email)" />
+					</vlayout>
+
+					<vlayout spacing="1px">
+						<label value="Data de nascimento:"
+							style="font-weight:bold" />
+						<label
+							value="@load(vm.participante.dtNascimentoStr)" />
+					</vlayout>
+
+					<vlayout spacing="1px">
+						<label value="Endereço:"
+							style="font-weight:bold" />
+						<label
+							value="@load(vm.participante.enderecoStr)" />
+						<label
+							value="@load(vm.participante.municipioEstadoStr)" />
+					</vlayout>
+
+					<vlayout spacing="1px">
+						<label value="Tipo de participante:"
+							style="font-weight:bold" />
+						<label
+							value="@load(vm.participante.tipoParticipanteStr)" />
+					</vlayout>
+				</hlayout>
+
+				<div align="center">
+					<separator />
+					<vlayout>
+						<button tooltiptext="Atualizar dados"
+							style="font-size:13px; font-weight:bold" label="ATUALIZAR DADOS"
+							onClick="@command('abrirModalAtualizarParticipante', visible=true)" />
+					</vlayout>
+				</div>
+			</panelchildren>
+		</panel>
+
+		<window id="modalWindow" mode="modal" visible="false">
+			<vbox align="left" style="padding:15px">
+				<label value="Atualizar dados" sclass="custom-title" />
+				<hlayout spacing="15px">
+					<vlayout spacing="7px">
+						<vlayout spacing="1px">
+							<hlayout spacing="0px">
+								<label value="Nome:"
+									style="font-weight:bold" />
+								<label value="*"
+									style="font-weight:bold; color:#992536" />
+							</hlayout>
+							<textbox value="@bind(vm.participante.nome)"
+								onChange="self.setValue(self.getValue().toUpperCase().trim());"
+								width="250px" focus="true" />
+						</vlayout>
+						<vlayout spacing="1px">
+							<hlayout spacing="0px">
+								<label value="Telefone fixo:"
+									style="font-weight:bold" />
+								<label value="*"
+									style="font-weight:bold; color:#992536" />
+							</hlayout>
+							<textbox
+								value="@bind(vm.participante.telFixo)"
+								w:onBind="jq(this).mask('(99)9999-9999');" />
+						</vlayout>
+						<vlayout spacing="1px">
+							<hlayout spacing="0px">
+								<label value="Telefone celular:"
+									style="font-weight:bold" />
+								<label value="*"
+									style="font-weight:bold; color:#992536" />
+							</hlayout>
+							<textbox
+								value="@bind(vm.participante.telCelular)"
+								w:onBind="jq(this).mask('(99)99999-9999');" />
+						</vlayout>
+						<vlayout spacing="1px">
+							<hlayout spacing="0px">
+								<label value="Telefone comercial:"
+									style="font-weight:bold" />
+							</hlayout>
+							<textbox
+								value="@bind(vm.participante.telComercial)"
+								w:onBind="jq(this).mask('(99)9999-9999');" />
+						</vlayout>
+					</vlayout>
+
+					<vlayout spacing="7px">
+						<vlayout spacing="1px">
+							<hlayout spacing="0px">
+								<label value="Logradouro:"
+									style="font-weight:bold" />
+								<label value="*"
+									style="font-weight:bold; color:#992536" />
+							</hlayout>
+							<textbox
+								value="@bind(vm.participante.logradouro)"
+								onChange="self.setValue(self.getValue().toUpperCase().trim());"
+								width="250px" focus="true" />
+						</vlayout>
+						<hlayout spacing="10px">
+							<vlayout spacing="1px">
+								<hlayout spacing="0px">
+									<label value="Bairro:"
+										style="font-weight:bold" />
+									<label value="*"
+										style="font-weight:bold; color:#992536" />
+								</hlayout>
+								<textbox
+									value="@bind(vm.participante.bairro)"
+									onChange="self.setValue(self.getValue().toUpperCase().trim());" />
+							</vlayout>
+							<vlayout spacing="1px">
+								<hlayout spacing="0px">
+									<label value="Número:"
+										style="font-weight:bold" />
+									<label value="*"
+										style="font-weight:bold; color:#992536" />
+								</hlayout>
+								<textbox
+									value="@bind(vm.participante.numero)"
+									onChange="self.setValue(self.getValue().toUpperCase().trim());"
+									width="100px" />
+							</vlayout>
+						</hlayout>
+						<hlayout spacing="10px">
+							<vlayout spacing="1px">
+								<label value="Complemento:"
+									style="font-weight:bold" />
+								<textbox
+									value="@bind(vm.participante.complemento)"
+									onChange="self.setValue(self.getValue().toUpperCase().trim());" />
+							</vlayout>
+							<vlayout spacing="1px">
+								<hlayout spacing="0px">
+									<label value="CEP:"
+										style="font-weight:bold" />
+									<label value="*"
+										style="font-weight:bold; color:#992536" />
+								</hlayout>
+								<textbox
+									value="@bind(vm.participante.cep)" width="100px"
+									w:onBind="jq(this).mask('99999-999');" />
+							</vlayout>
+						</hlayout>
+						<vlayout spacing="1px">
+							<hlayout spacing="0px">
+								<label value="Estado:"
+									style="font-weight:bold" />
+								<label value="*"
+									style="font-weight:bold; color:#992536" />
+							</hlayout>
+							<textbox disabled="true"
+								visible="@bind(!vm.alterarEstadoVisible)"
+								value="@bind(vm.participante.estado.nome)" />
+							<combobox
+								visible="@bind(vm.alterarEstadoVisible)" id="comboEstadosModal"
+								onSelect="@command('carregarListaPorEstado')"
+								model="@bind(vm.estados)" autocomplete="true"
+								selectedItem="@bind(vm.participante.estado)">
+								<template name="model" var="estado">
+									<comboitem
+										label="@load(estado.nome)" value="@load(estado)" />
+								</template>
+							</combobox>
+						</vlayout>
+						<vlayout spacing="1px">
+							<hlayout spacing="0px">
+								<label value="Município:"
+									style="font-weight:bold" />
+								<label value="*"
+									style="font-weight:bold; color:#992536" />
+							</hlayout>
+							<textbox disabled="true"
+								visible="@bind(!vm.alterarEstadoVisible)"
+								value="@bind(vm.participante.municipio.nome)" />
+							<combobox
+								visible="@bind(vm.alterarEstadoVisible)" id="comboMunicipios"
+								width="250px" model="@bind(vm.municipios)" autocomplete="true"
+								selectedItem="@bind(vm.participante.municipio)">
+								<template name="model"
+									var="municipio">
+									<comboitem
+										label="@load(municipio.nome)" value="@load(municipio)" />
+								</template>
+							</combobox>
+						</vlayout>
+						<button
+							visible="@bind(!vm.alterarEstadoVisible)"
+							tooltiptext="Alterar estado e município"
+							style="font-size:10px; font-weight:bold"
+							label="Alterar estado e município"
+							onClick="@command('exibirOpcoesEditarEstado')" />
+					</vlayout>
+
+					<vlayout spacing="7px">
+						<vlayout spacing="1px">
+							<hlayout spacing="0px">
+								<label value="Data de nascimento:"
+									style="font-weight:bold" />
+								<label value="*"
+									style="font-weight:bold; color:#992536" />
+							</hlayout>
+							<datebox format="dd/MM/yyyy" cols="12"
+								placeholder="dd/mm/aaaa" maxlength="10"
+								value="@bind(vm.participante.dtNascimento)" />
+						</vlayout>
+						<vlayout spacing="1px">
+							<hlayout spacing="0px">
+								<label value="E-mail:"
+									style="font-weight:bold" />
+								<label value="*"
+									style="font-weight:bold; color:#992536" />
+							</hlayout>
+							<textbox
+								onChange="self.setValue(self.getValue().toLowerCase().trim());"
+								width="250px" value="@bind(vm.participante.email)" />
+						</vlayout>
+						<vlayout spacing="1px">
+							<hlayout spacing="0px">
+								<label value="Repita o e-mail:"
+									style="font-weight:bold" />
+								<label value="*"
+									style="font-weight:bold; color:#992536" />
+							</hlayout>
+							<textbox
+								onChange="self.setValue(self.getValue().toLowerCase().trim());"
+								width="250px" value="@bind(vm.participante.repeteEmail)" />
+						</vlayout>
+					</vlayout>
+				</hlayout>
+
+				<separator height="10px" />
+				<div align="center">
+					<hbox>
+						<button tooltiptext="Fechar"
+							style="font-weight:bold" label="FECHAR"
+							onClick="@command('abrirModalAtualizarParticipante', visible=false)" />
+						<button tooltiptext="Salvar alterações"
+							style="font-weight:bold"
+							label="SALVAR ALTERAÇÕES" image="imagens/save.png"
+							onClick="@command('abrirModalConfirmaAtualizarParticipante', visible=true)" />
+					</hbox>
+				</div>
+			</vbox>
+		</window>
+
+		<window id="modalConfirmacao" mode="modal" visible="false">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true"
+					value="Confirma a atualização dos seus dados?" />
+
+				<separator />
+				<hlayout>
+					<button label="Sim"
+						onClick="@command('atualizarParticipante')" />
+					<button label="Não"
+						onClick="@command('abrirModalConfirmaAtualizarParticipante', visible=false)" />
+				</hlayout>
+			</vbox>
+		</window>
+	</window>
+</zk>

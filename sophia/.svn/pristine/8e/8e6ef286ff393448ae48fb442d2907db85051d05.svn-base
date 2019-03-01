@@ -1,0 +1,64 @@
+<zk>
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.client.pages.ColaboradoresVM')">
+		<panel title="Minhas atividades como colaborador"
+			border="normal">
+			<panelchildren>
+				<vlayout>
+					<label visible="@load(!vm.colaboradorCadastrado)"
+						value="Você ainda não está cadastrado como colaborador. Faça o pré-cadastro para poder visualizar suas colaborações." />
+					<vlayout
+						visible="@load(vm.colaboradorCadastrado)">
+						<hbox align="center">
+							<textbox placeholder="Filtrar por evento"
+								instant="true" width="425px"
+								value="@bind(vm.filtroEvento.filtro1)"
+								onChange="@command('aplicarFiltro')" />
+							<textbox placeholder="Filtrar por atividade"
+								instant="true" width="350px"
+								value="@bind(vm.filtroEvento.filtro2)"
+								onChange="@command('aplicarFiltro')" />
+							<button label="Limpar filtro"
+								onClick="@command('limparFiltro')" />
+						</hbox>
+						<grid model="@bind(vm.colaboracoes)"
+							mold="paging" pageSize="4"
+							onCreate="@command('carregarAtividadesPorColaborador')"
+							emptyMessage="@load(vm.colaborador.statusCadastro ne '1' ? 'Sem itens encontrados' : 'Aguardando confirmação de cadastro de colaborador')">
+							<columns>
+								<column
+									sort="auto(atividade.evento.nome)" label="Evento" />
+								<column align="center"
+									sort="auto(atividade.nome)" label="Atividade" />
+								<column align="center" width="150px"
+									label="Data" />
+								<column align="center" width="200px"
+									label="Tipo de colaboração" />
+								<column align="center" width="200px"
+									label="Certificado disponível" />
+							</columns>
+							<template name="model" var="colaboracao">
+								<row>
+									<label style="font-weight:bold"
+										value="@load(colaboracao.atividade.evento.nomeStr)" />
+									<label
+										value="@load(colaboracao.atividade.nomeStr)" />
+									<label
+										value="@load(colaboracao.atividade.dataStr)" />
+									<label
+										value="@load(colaboracao.tipoColaborador.nome)" />
+									<label
+										value="@load(colaboracao.certificadoDisponivelStr)" />
+								</row>
+							</template>
+							<foot>
+								<footer span="6"
+									label="@load(vm.textoRodape)" />
+							</foot>
+						</grid>
+					</vlayout>
+				</vlayout>
+			</panelchildren>
+		</panel>
+	</window>
+</zk>

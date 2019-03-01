@@ -1,0 +1,202 @@
+<zk xmlns:w="client">
+	<script type="text/javascript" src="/js/jquery.maskedinput.js" />
+	<script type="text/javascript">
+		$.mask.definitions['A']='[A-Z]';
+		$.mask.definitions['d']='[0123]';
+		$.mask.definitions['m']='[01]'; $.mask.definitions['y']='[12]';
+	</script>
+
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.gerenciamento.pages.AtividadesVM')">
+		<panel title="Disponibilizar material" border="normal">
+			<panelchildren>
+				<vlayout>
+					<hlayout spacing="7px">
+						<vlayout spacing="1px">
+							<label value="Categoria:"
+								style="font-weight:bold" />
+							<combobox autocomplete="true" width="200px"
+								focus="true"
+								onSelect="@command('carregarEventosPorCategoria', categoria=self.value)"
+								selectedItem="@bind(vm.categoria)">
+								<comboitem label="PREVISTO"
+									value="PREVISTO" />
+								<comboitem label="ABERTO"
+									value="ABERTO" />
+								<comboitem label="EM ANDAMENTO"
+									value="EM ANDAMENTO" />
+								<comboitem label="REALIZADO"
+									value="REALIZADO" />
+							</combobox>
+						</vlayout>
+						<vlayout spacing="1px">
+							<label value="Evento:"
+								style="font-weight:bold" />
+							<hbox align="center">
+								<combobox id="comboEventos"
+									model="@bind(vm.eventos)" autocomplete="true" width="400px"
+									onSelect="@command('carregarListaPorEvento')"
+									selectedItem="@bind(vm.eventoSelecionado)">
+									<template name="model"
+										var="evento">
+										<comboitem
+											label="@load(evento.nome)" value="@load(evento)" />
+									</template>
+								</combobox>
+							</hbox>
+						</vlayout>
+					</hlayout>
+					<vlayout spacing="1px">
+						<label value="Atividade(s):"
+							style="font-weight:bold" />
+						<grid model="@bind(vm.atividades)"
+							emptyMessage="Sem atividades encontradas" mold="paging"
+							pageSize="3">
+							<columns>
+								<column
+									label="Informações da atividade" />
+								<column label="Adicionar" align="center"
+									width="150px" />
+								<column label="Visualizar arquivos"
+									align="center" width="160px" />
+							</columns>
+
+							<template name="model" var="atividade">
+								<row>
+									<vlayout spacing="1px">
+										<label
+											value="@load(atividade.nomeStr)"
+											style="font-size:18px; font-weight:bold" />
+										<hlayout spacing="5px">
+											<hlayout>
+												<label
+													value="Data início:" style="font-weight:bold" />
+												<label
+													value="@load(atividade.dataInicioStr)" />
+											</hlayout>
+											<hlayout>
+												<label value="Data fim:"
+													style="font-weight:bold" />
+												<label
+													value="@load(atividade.dataFimStr)" />
+											</hlayout>
+										</hlayout>
+										<hlayout spacing="5px">
+											<hlayout>
+												<label
+													value="Hora início:" style="font-weight:bold" />
+												<label
+													value="@load(atividade.horaInicioStr)" />
+											</hlayout>
+											<hlayout>
+												<label value="Hora fim:"
+													style="font-weight:bold" />
+												<label
+													value="@load(atividade.horaFimStr)" />
+											</hlayout>
+										</hlayout>
+									</vlayout>
+									<button
+										class="@load(atividade.atividadeStr)" mold="trendy"
+										upload="true"
+										tooltiptext="Clique para fazer o upload do material dessa atividade"
+										iconSclass="z-icon-plus-circle" height="40px"
+										onUpload="@command('abrirModalUploadArquivo', visible=true, atividade=atividade)" />
+
+									<button
+										tooltiptext="Clique para visualizar os arquivos que foram inseridos nessa atividade"
+										onClick="@command('abrirModalVisualizarArquivos',visible=true, atividade=atividade)"
+										iconSclass="z-icon-bars" height="40px" />
+								</row>
+							</template>
+						</grid>
+					</vlayout>
+				</vlayout>
+			</panelchildren>
+		</panel>
+
+		<window id="modalUploadArquivo" mode="modal" visible="false">
+			<vbox align="left" style="padding:15px">
+				<label value="Inserir material" sclass="custom-title" />
+				<hlayout spacing="0px">
+					<label value="Nome: " style="font-weight:bold" />
+					<label value="@load(vm.arquivo.nome)" />
+				</hlayout>
+				
+				<separator />
+				
+				<hlayout spacing="0px">
+					<label value="Descricao: " style="font-weight:bold"/>
+				</hlayout>
+				<textbox value="@bind(vm.arquivo.descricao)" width="250px" rows="5" />
+								
+				<separator />
+				
+				<hlayout>
+					<button id="cancelar" label="Cancelar"
+						onClick="@command('abrirModalUploadArquivo', visible=false, atividade=null)"
+						autodisable="enviarArquivo, cancelar" />
+					<button id="enviarArquivo"
+						tooltiptext="Clique aqui para enviar o arquivo dessa atividade"
+						label="Enviar" onClick="@command('uploadArquivo')" />
+				</hlayout>
+			</vbox>
+		</window>
+
+		<window id="modalVisualizarArquivos" mode="modal"
+			visible="false">
+			<vbox align="left" style="padding:15px">
+				<label value="@load(vm.atividadeSelecionada.nomeStr)"
+					sclass="custom-title" />
+
+				<grid model="@bind(vm.arquivos)"
+					emptyMessage="Nenhum arquivo adicionado" mold="paging"
+					width="950px" pageSize="4">
+
+					<columns>
+						<column label="Arquivos" />
+						<column label="Descrição" />
+						<column label="Download" align="center"
+							width="150px" />
+						<column label="Remover" align="center"
+							width="160px" />
+					</columns>
+					<template name="model" var="arquivo">
+						<row>
+							<label value="@load(arquivo.nome)" />
+							<label value="@load(arquivo.descricao)" />
+							<button
+								tooltiptext="Clique aqui para fazer o download do arquivo"
+								onClick="@command('downloadArquivo', arquivo = arquivo)"
+								iconSclass="z-icon-download" height="40px" />
+							<button
+								tooltiptext="Clique aqui para remover arquivos dessa atividade"
+								onClick="@command('abrirModalRemoverArquivo', visible = true, arquivo = arquivo)"
+								iconSclass="z-icon-eraser" height="40px" />
+						</row>
+					</template>
+				</grid>
+				<div align="center">
+					<button label="Fechar"
+						onClick="@command('abrirModalVisualizarArquivos', visible = false, atividade=null)" />
+				</div>
+			</vbox>
+		</window>
+
+		<window id="modalRemoverArquivo" mode="modal" visible="false">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true"
+					value="Confirma a remoção desse arquivo?" />
+				<separator />
+				<hlayout>
+					<button id="remover" label="Remover"
+						onClick="@command('removerArquivo')"
+						autodisable="remover, naoRemover" />
+					<button id="naoRemover" label="Não"
+						onClick="@command('abrirModalRemoverArquivo', visible=false)" />
+				</hlayout>
+			</vbox>
+		</window>
+
+	</window>
+</zk>

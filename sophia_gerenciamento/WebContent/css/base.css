@@ -1,0 +1,206 @@
+@charset "UTF-8";
+
+/* Estilos da nova interface */
+/* Estilos ZK */
+body {
+	padding: 0px;
+	height: 100%;
+	min-height: 100%;
+}
+
+.z-label {
+	font-size: 15px;
+}
+
+.z-textbox, .z-decimalbox, .z-intbox, .z-longbox, .z-doublebox {
+	font-size: 15px;
+}
+
+.z-toolbarbutton-content {
+	color: #242C6D;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.z-window {
+	padding: 0px;
+	border-radius: unset;
+}
+
+.z-window-content {
+	padding: 0px;
+}
+
+.z-menubar {
+	/* Cor para módulo gerenciamento */
+	background: #4A4A4A;
+	border-top: 1px solid #1D1D1D;
+	border-bottom: 1px solid #1D1D1D;
+}
+
+.z-menubar-horizontal li {
+	margin: 4px;
+}
+
+.z-menu-text, .z-menuitem-text{
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.z-panel-header {
+	font-size: 20px;
+	font-weight: bold;
+	color: #FFF;
+}
+
+.z-menu-content, .z-menuitem-content {
+	background: none;
+	color: #FFF;
+}
+
+.z-menu-selected>.z-menu-content, .z-menu-content:hover,
+	.z-menuitem-content:hover, .z-menu-content:focus, .z-menuitem-content:focus,
+	.z-menu-hover>.z-menu-content, .z-menuitem-hover>.z-menuitem-content {
+	color: #fff !important;
+	background-color: #0093F9 !important;
+}
+
+.z-panel {
+	/* Cor para módulo gerenciamento */
+	margin: 15px;
+	background: #4A4A4A;
+	border: 1px solid #4A4A4A;
+}
+
+.z-panel-icon {
+	padding: 0px;
+}
+
+.z-grid-header, .z-grid-body, .z-grid-footer, .z-grid-header table,
+	.z-grid-body table {
+	width: 100% !important;
+}
+
+.z-north, .z-south, .z-west, .z-center, .z-east {
+	width: 100% !important;
+	border: none;
+	background: transparent;
+}
+
+.z-notification-content {
+	min-height: 0;
+	vertical-align: middle;
+}
+
+.z-tab-text {
+	font-weight: bold;
+}
+
+.z-tab-image {
+	vertical-align: middle;
+	margin-right: 4px;
+	width: auto;
+	height: auto;
+}
+
+/* Estilos criados */
+.custom-title {
+	font-size: 20px;
+	font-weight: bold;
+	color: #0093F9;
+}
+
+.panel-alert-green {
+	background: #d4edda;
+}
+
+.custom-panel {
+	margin-top: 2%;
+	box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.5);
+	-webkit-box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.custom-footer {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	padding: 10px;
+	background-color: #EDEDED;
+	text-align: center;
+}
+
+.custom-label-eventos {
+	font-size: 16px;
+	font-weight: bold;
+	color: #0093F9;
+}
+
+.custom-label-atividades-titulo {
+	font-size: 13px;
+	font-weight: bold;
+	color: #0093F9;
+}
+
+.custom-label-atividades-conteudo {
+	font-size: 12px;
+}
+
+.custom-tab-eventos {
+	font-size: 22px;	
+}
+
+.custom-tab-atividades-small {
+	font-size: 11px
+}
+
+.custom-tab-atividades-regular {
+	font-size: 13px;
+}
+
+.right-menu {
+	position: absolute !important;
+	right: 0;
+}
+
+.button-basic {
+	color: #000000;
+	background-color: #F0F0F0;
+}
+
+.button-basic:hover, .button-basic:focus, .button-basic:active {
+	color: #333;
+	text-decoration: none;
+	background-color: transparent;
+	border-color: transparent;
+}
+
+.button-default {
+	background-color: #FFFFFF;
+}
+
+.button-primary {
+	color: #fff;
+	background-color: #337AB7;
+	border-color: #2E6DA4;
+}
+
+.button-primary:hover, .button-primary:focus, .button-primary:active {
+	color: #fff;
+	text-decoration: none;
+	background-color: #286090;
+	border-color: #204D74;
+}
+
+.button-success {
+	background-color: #5CB85C;
+}
+
+.button-warning {
+	background-color: #F0AD4E;
+}
+
+.button-danger {
+	background-color: #D9534F;
+}

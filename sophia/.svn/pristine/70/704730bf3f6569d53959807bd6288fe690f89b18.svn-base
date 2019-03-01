@@ -1,0 +1,25 @@
+{
+  "plugins": {
+    "guess-types": {
+      
+    }
+  },
+  "plugins": {
+    "guess-types": {
+      
+    },
+    "outline": {
+      
+    },
+    "outline": {
+      
+    },
+    "angular": {
+      
+    }
+  },
+  "libs": [
+    "ecma5",
+    "browser"
+  ]
+}

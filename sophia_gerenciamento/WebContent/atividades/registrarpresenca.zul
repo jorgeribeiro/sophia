@@ -1,0 +1,153 @@
+<zk>
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.gerenciamento.pages.AtividadesVM')">
+		<panel title="Registrar presença" border="normal">
+			<panelchildren>
+				<vlayout>
+					<hlayout spacing="7px">
+						<vlayout spacing="1px">
+							<label value="Categoria:"
+								style="font-weight:bold" />
+							<combobox autocomplete="true" width="200px"
+								focus="true"
+								onSelect="@command('carregarEventosPorCategoria', categoria=self.value)">
+								<comboitem label="ABERTO"
+									value="ABERTO" />
+								<comboitem label="EM ANDAMENTO"
+									value="EM ANDAMENTO" />
+								<comboitem label="REALIZADO"
+									value="REALIZADO" />
+							</combobox>
+						</vlayout>
+						<vlayout spacing="1px">
+							<label value="Evento:"
+								style="font-weight:bold" />
+							<combobox id="comboEventos"
+								model="@bind(vm.eventos)" autocomplete="true" width="400px"
+								onSelect="@command('carregarListaPorEvento')"
+								selectedItem="@bind(vm.eventoSelecionado)">
+								<template name="model" var="evento">
+									<comboitem
+										label="@load(evento.nome)" value="@load(evento)" />
+								</template>
+							</combobox>
+						</vlayout>
+						<vlayout spacing="1px">
+							<label value="Atividade:"
+								style="font-weight:bold" />
+							<combobox id="comboAtividades"
+								model="@bind(vm.atividades)" autocomplete="true" width="400px"
+								onSelect="@command('carregarListaPorAtividade')"
+								selectedItem="@bind(vm.atividadeSelecionada)">
+								<template name="model"
+									var="atividade">
+									<comboitem
+										label="@load(atividade.nome)" value="@load(atividade)" />
+								</template>
+							</combobox>
+						</vlayout>
+						<vlayout spacing="1px">
+							<label value="Dia:"
+								style="font-weight:bold" />
+							<combobox id="comboDias"
+								model="@bind(vm.dias)" autocomplete="true"
+								onSelect="@command('carregarListaPorDia')" width="200px"
+								selectedItem="@bind(vm.diaSelecionado)">
+								<template name="model" var="dia">
+									<comboitem
+										label="@load(dia.dataStr)" value="@load(dia)" />
+								</template>
+							</combobox>
+						</vlayout>
+					</hlayout>
+
+					<separator />
+					<vlayout spacing="5px">
+						<vlayout spacing="1px">
+							<label
+								value="Lista de inscritos na atividade selecionada:" />
+							<hbox>
+								<textbox placeholder="Filtrar por nome"
+									instant="true" width="450px"
+									value="@bind(vm.filtroParticipante.filtro1)"
+									onChange="@command('aplicarFiltro')" />
+								<textbox placeholder="Filtrar por email"
+									instant="true" width="345px"
+									value="@bind(vm.filtroParticipante.filtro2)"
+									onChange="@command('aplicarFiltro')" />
+								<button label="Limpar filtro"
+									onClick="@command('limparFiltro')" />
+							</hbox>
+						</vlayout>
+						<grid model="@bind(vm.frequencias)"
+							mold="paging" pageSize="5"
+							emptyMessage="Sem participantes encontrados.">
+							<columns>
+								<column label="Nome"
+									sort="auto(participanteInscrito.participante.nome)" />
+								<column align="center"
+									sort="auto(participanteInscrito.participante.email)"
+									label="E-mail" />
+								<column align="center" width="300px"
+									label="Município/Estado" />
+								<column align="center" label="Presença"
+									width="170px" />
+							</columns>
+							<template name="model" var="frequencia">
+								<row>
+									<label style="font-weight:bold"
+										value="@load(frequencia.participanteInscrito.participante.nome)" />
+									<label
+										value="@load(frequencia.participanteInscrito.participante.email)" />
+									<label
+										value="@load(frequencia.participanteInscrito.participante.municipioEstadoStr)" />
+									<button
+										tooltiptext="@load(frequencia.participanteInscrito.certificadoDisponivel ? 'Esse participante já teve seu certificado disponibilizado, portanto, não pode ter sua frequência alterada' : 'Clique para confirmar ou remover a presença desse participante')"
+										onClick="@command('gerenciarPresenca', frequencia=frequencia)"
+										disabled="@load(frequencia.participanteInscrito.certificadoDisponivel)"
+										iconSclass="@load(frequencia.presenca ? 'z-icon-check' : 'z-icon-circle')"
+										height="40px" />
+								</row>
+							</template>
+							<foot>
+								<footer span="4"
+									label="@load(vm.textoRodape1)" />
+							</foot>
+						</grid>
+
+						<div align="center"
+							visible="@load(not empty vm.frequencias)">
+							<separator />
+							<vlayout>
+								<button
+									tooltiptext="Confirmar/remover todas as presenças"
+									style="font-weight:bold" iconSclass="z-icon-check"
+									dir="reverse" label="Confirmar/remover todas as presenças"
+									onClick="@command('confirmarRemoverPresencas')" />
+								<button tooltiptext="Salvar alterações"
+									style="font-weight:bold" label="SALVAR ALTERAÇÕES"
+									image="imagens/save.png"
+									onClick="@command('abrirModalConfirmaAlteracoes', visible=true)" />
+							</vlayout>
+						</div>
+					</vlayout>
+				</vlayout>
+			</panelchildren>
+		</panel>
+
+		<window id="modalConfirmacao" mode="modal" visible="false">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true"
+					value="Confirma as alterações de presença nessa atividade?" />
+
+				<separator />
+				<hlayout>
+					<button label="Sim"
+						onClick="@command('confirmarAlteracoes')" />
+					<button label="Não"
+						onClick="@command('abrirModalConfirmaAlteracoes', visible=false)" />
+				</hlayout>
+			</vbox>
+		</window>
+	</window>
+</zk>

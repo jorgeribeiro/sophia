@@ -1,0 +1,148 @@
+<zk>
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.gerenciamento.pages.AtividadesVM')">
+		<panel title="Inscrever participantes" border="normal">
+			<panelchildren>
+				<vlayout>
+					<hlayout spacing="7px">
+						<vlayout spacing="1px">
+							<label value="Categoria:"
+								style="font-weight:bold" />
+							<combobox autocomplete="true" width="200px"
+								focus="true"
+								onSelect="@command('carregarEventosPorCategoria', categoria=self.value)">
+								<comboitem label="ABERTO"
+									value="ABERTO" />
+								<comboitem label="EM ANDAMENTO"
+									value="EM ANDAMENTO" />
+								<comboitem label="REALIZADO"
+									value="REALIZADO" />
+							</combobox>
+						</vlayout>
+						<vlayout spacing="1px">
+							<label value="Evento:"
+								style="font-weight:bold" />
+							<combobox id="comboEventos"
+								model="@bind(vm.eventos)" autocomplete="true" width="400px"
+								onSelect="@command('carregarListaPorEvento')"
+								selectedItem="@bind(vm.eventoSelecionado)">
+								<template name="model" var="evento">
+									<comboitem
+										label="@load(evento.nome)" value="@load(evento)" />
+								</template>
+							</combobox>
+						</vlayout>
+						<vlayout spacing="1px">
+							<label value="Atividade:"
+								style="font-weight:bold" />
+							<combobox id="comboAtividades"
+								model="@bind(vm.atividades)" autocomplete="true" width="400px"
+								onSelect="@command('carregarListaPorAtividade')"
+								selectedItem="@bind(vm.atividadeSelecionada)">
+								<template name="model"
+									var="atividade">
+									<comboitem
+										label="@load(atividade.nome)" value="@load(atividade)" />
+								</template>
+							</combobox>
+						</vlayout>
+					</hlayout>
+					<vlayout spacing="5px">
+						<vlayout spacing="1px"
+							visible="@load(vm.atividadeSelecionada.vagasServidor ne null)">
+							<label
+								value="Atividade com vagas limitadas por público-alvo:"
+								style="font-weight:bold" />
+							<hlayout>
+								<label value="Sociedade:" />
+								<label value="@load(vm.vagasSociedade)" />
+							</hlayout>
+							<hlayout>
+								<label value="Servidor do TCE-MA:" />
+								<label value="@load(vm.vagasServidor)" />
+							</hlayout>
+							<hlayout>
+								<label value="Jurisdicionado:" />
+								<label
+									value="@load(vm.vagasJurisdicionado)" />
+							</hlayout>
+						</vlayout>
+
+						<separator />
+						<label
+							value="Encontre o participante que deseja inscrever na atividade selecionada 
+							utilizando os filtros de pesquisa abaixo:" />
+						<hbox align="center">
+							<textbox placeholder="Filtrar por nome"
+								instant="true" width="300px"
+								value="@bind(vm.filtroParticipante.filtro1)"
+								onChange="@command('aplicarFiltro')" />
+							<textbox placeholder="Filtrar por email"
+								instant="true" width="295px"
+								value="@bind(vm.filtroParticipante.filtro2)"
+								onChange="@command('aplicarFiltro')" />
+							<button label="Limpar filtro"
+								onClick="@command('limparFiltro')" />
+						</hbox>
+						<grid model="@bind(vm.participantes)"
+							mold="paging" pageSize="4"
+							emptyMessage="Sem participantes encontrados.">
+							<columns>
+								<column label="Nome" sort="auto(nome)" />
+								<column label="E-mail" align="center"
+									sort="auto(email)" />
+								<column align="center" width="200px"
+									sort="auto(tipoPessoa)" label="Tipo de participante" />
+								<column align="center" width="170px"
+									sort="auto(estado.nome)" label="Estado" />
+								<column align="center" width="170px"
+									sort="auto(municipio.nome)" label="Município" />
+								<column align="center" width="170px"
+									label="Inscrever" />
+							</columns>
+							<template name="model" var="participante">
+								<row>
+									<label style="font-weight:bold"
+										value="@load(participante.nome)" />
+									<label
+										value="@load(participante.email)" />
+									<label
+										value="@load(participante.tipoParticipanteStr)" />
+									<label
+										value="@load(participante.estado.nome)" />
+									<label
+										value="@load(participante.municipio.nome)" />
+									<button
+										tooltiptext="Clique para inscrever esse participante na atividade selecionada"
+										onClick="@command('abrirModalConfirmaInscreverParticipante', participante=participante, visible=true)"
+										iconSclass="z-icon-plus-circle" height="40px" />
+								</row>
+							</template>
+							<foot>
+								<footer span="6"
+									label="@load(vm.textoRodape2)" />
+							</foot>
+						</grid>
+					</vlayout>
+				</vlayout>
+			</panelchildren>
+		</panel>
+
+		<window id="modalConfirmacao" mode="modal" visible="false">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true"
+					value="Confirma a inscrição desse participante na atividade selecionada?" />
+
+				<separator />
+				<hlayout>
+					<button id="buttonSim" label="Sim"
+						onClick="@command('inscreverParticipante')"
+						autodisable="buttonSim, buttonNao" />
+					<button id="buttonNao" label="Não"
+						onClick="@command('abrirModalConfirmaInscreverParticipante', participante=null, visible=false)" />
+				</hlayout>
+			</vbox>
+		</window>
+	</window>
+
+</zk>

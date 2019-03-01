@@ -1,0 +1,437 @@
+<?page title="Cadastro - ESCEX - Sophia" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:w='client'>
+	<?link rel="shortcut icon" type="image/x-icon" href="imagens/SOPHIA_icon.png"?>
+	<script type="text/javascript" src="/js/jquery.maskedinput.js" />
+	<script type="text/javascript">
+		$.mask.definitions['A']='[A-Z]';
+		$.mask.definitions['d']='[0123]';
+		$.mask.definitions['m']='[01]'; $.mask.definitions['y']='[12]';
+	</script>
+	<style dynamic="true" src="/css/base.css" />
+
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.client.pages.CadastroVM')">
+
+		<!-- Menu de opções para participante não logado -->
+		<menubar>
+			<menuitem label="SOPHIA" image="/imagens/SOPHIA_icon.png"
+				onClick='Executions.getCurrent().sendRedirect("/index.zul")' />
+			<menu label="Eventos">
+				<menupopup>
+					<menuitem label="Visualizar eventos"
+						iconSclass="z-icon-calendar"
+						onClick='Executions.getCurrent().sendRedirect("/index.zul")' />
+				</menupopup>
+			</menu>
+			<menuitem label="Validar certificado"
+				onClick="@command('validarCertificado')" />
+			<menuitem label="Manual de usuário"
+				onClick="@command('downloadManual')" />
+			<menuitem label="Login" sclass="right-menu"
+				onClick='Executions.getCurrent().sendRedirect("/login.zul")' />
+		</menubar>
+
+		<div align="center">
+			<panel title="Cadastro" border="normal"
+				style="width:70%; heigth:10%;">
+				<panelchildren>
+					<vbox align="left" style="padding:15px">
+						<vlayout spacing="1px">
+							<hlayout spacing="2px">
+								<label
+									value="Campos obrigatórios estão marcados com "
+									style="font-weight:bold" />
+								<label value="*"
+									style="font-weight:bold; color:#992536" />
+							</hlayout>
+							<hlayout spacing="0px">
+								<label value="Tipo de usuário:"
+									style="font-weight:bold" />
+								<label value="*"
+									style="font-weight:bold; color:#992536" />
+							</hlayout>
+							<combobox id="comboTipoPessoa" focus="true"
+								selectedItem="@bind(vm.pessoa.tipoPessoa)" autocomplete="true"
+								onSelect="@command('abrirModalLoginDeUsuario', visible=true)">
+								<comboitem label="SERVIDOR DO TCE-MA"
+									value="2" />
+								<comboitem label="JURISDICIONADO"
+									value="3" />
+								<comboitem label="SOCIEDADE" value="1" />
+							</combobox>
+						</vlayout>
+						<hlayout spacing="15px">
+							<vlayout spacing="7px">
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="Nome completo:"
+											style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<textbox
+										disabled="@load(vm.loginValido ne true)"
+										value="@bind(vm.pessoa.nome)"
+										onChange="self.setValue(self.getValue().toUpperCase().trim());"
+										width="250px" />
+								</vlayout>
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="CPF:"
+											style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<textbox
+										disabled="@load(vm.loginValido ne true)"
+										value="@bind(vm.pessoa.cpf)"
+										w:onBind="jq(this).mask('999.999.999-99');" />
+								</vlayout>
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="Sexo:"
+											style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<combobox
+										disabled="@load(vm.loginValido ne true)"
+										selectedItem="@bind(vm.pessoa.sexo)">
+										<comboitem label="MASCULINO"
+											value="MASCULINO" />
+										<comboitem label="FEMININO"
+											value="FEMININO" />
+									</combobox>
+								</vlayout>
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="Telefone fixo:"
+											style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<textbox
+										disabled="@load(vm.loginValido ne true)"
+										value="@bind(vm.pessoa.telFixo)"
+										w:onBind="jq(this).mask('(99)9999-9999');" />
+								</vlayout>
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="Telefone celular:"
+											style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<textbox
+										disabled="@load(vm.loginValido ne true)"
+										value="@bind(vm.pessoa.telCelular)"
+										w:onBind="jq(this).mask('(99)99999-9999');" />
+								</vlayout>
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label
+											value="Telefone comercial:" style="font-weight:bold" />
+									</hlayout>
+									<textbox
+										disabled="@load(vm.loginValido ne true)"
+										value="@bind(vm.pessoa.telComercial)"
+										w:onBind="jq(this).mask('(99)9999-9999');" />
+								</vlayout>
+							</vlayout>
+
+							<vlayout spacing="7px">
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="Logradouro:"
+											style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<textbox
+										disabled="@load(vm.loginValido ne true)"
+										value="@bind(vm.pessoa.logradouro)"
+										onChange="self.setValue(self.getValue().toUpperCase().trim());"
+										width="250px" />
+								</vlayout>
+								<hlayout spacing="10px">
+									<vlayout spacing="1px">
+										<hlayout spacing="0px">
+											<label value="Bairro:"
+												style="font-weight:bold" />
+											<label value="*"
+												style="font-weight:bold; color:#992536" />
+										</hlayout>
+										<textbox
+											disabled="@load(vm.loginValido ne true)"
+											value="@bind(vm.pessoa.bairro)"
+											onChange="self.setValue(self.getValue().toUpperCase().trim());" />
+									</vlayout>
+									<vlayout spacing="1px">
+										<hlayout spacing="0px">
+											<label value="Número:"
+												style="font-weight:bold" />
+											<label value="*"
+												style="font-weight:bold; color:#992536" />
+										</hlayout>
+										<textbox
+											disabled="@load(vm.loginValido ne true)"
+											value="@bind(vm.pessoa.numero)"
+											onChange="self.setValue(self.getValue().toUpperCase().trim());"
+											width="100px" />
+									</vlayout>
+								</hlayout>
+								<hlayout spacing="10px">
+									<vlayout spacing="1px">
+										<label value="Complemento:"
+											style="font-weight:bold" />
+										<textbox
+											disabled="@load(vm.loginValido ne true)"
+											value="@bind(vm.pessoa.complemento)"
+											onChange="self.setValue(self.getValue().toUpperCase().trim());" />
+									</vlayout>
+									<vlayout spacing="1px">
+										<hlayout spacing="0px">
+											<label value="CEP:"
+												style="font-weight:bold" />
+											<label value="*"
+												style="font-weight:bold; color:#992536" />
+										</hlayout>
+										<textbox
+											disabled="@load(vm.loginValido ne true)"
+											value="@bind(vm.pessoa.cep)" width="100px"
+											w:onBind="jq(this).mask('99999-999');" />
+									</vlayout>
+								</hlayout>
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="Estado:"
+											style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<combobox id="comboEstados"
+										disabled="@load(vm.loginValido ne true)"
+										onSelect="@command('carregarListaPorEstado')"
+										model="@bind(vm.estados)" autodrop="true" readonly="true"
+										selectedItem="@bind(vm.pessoa.estado)">
+										<template name="model"
+											var="estado">
+											<comboitem
+												label="@load(estado.nome)" value="@load(estado)" />
+										</template>
+									</combobox>
+								</vlayout>
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="Município:"
+											style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<combobox id="comboMunicipios"
+										width="250px" disabled="@load(vm.loginValido ne true)"
+										model="@bind(vm.municipios)" autodrop="true" readonly="true"
+										selectedItem="@bind(vm.pessoa.municipio)">
+										<template name="model"
+											var="municipio">
+											<comboitem
+												label="@load(municipio.nome)" value="@load(municipio)" />
+										</template>
+									</combobox>
+								</vlayout>
+							</vlayout>
+
+							<vlayout spacing="7px">
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label
+											value="Data de nascimento:" style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<datebox
+										disabled="@load(vm.loginValido ne true)" format="dd/MM/yyyy"
+										cols="12" placeholder="dd/mm/aaaa" maxlength="10"
+										value="@bind(vm.pessoa.dtNascimento)" />
+								</vlayout>
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="E-mail:"
+											style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<textbox
+										onChange="self.setValue(self.getValue().toLowerCase().trim());"
+										disabled="@load(vm.loginValido ne true)" width="250px"
+										value="@bind(vm.pessoa.email)" />
+								</vlayout>
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="Repita o e-mail:"
+											style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<textbox
+										onChange="self.setValue(self.getValue().toLowerCase().trim());"
+										disabled="@load(vm.loginValido ne true)" width="250px"
+										value="@bind(vm.pessoa.repeteEmail)" />
+								</vlayout>
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="Senha:"
+											style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<textbox
+										disabled="@load(vm.loginValido ne true)" width="250px"
+										type="password" value="@bind(vm.pessoa.senha)" />
+								</vlayout>
+								<vlayout spacing="1px">
+									<hlayout spacing="0px">
+										<label value="Repita a senha:"
+											style="font-weight:bold" />
+										<label value="*"
+											style="font-weight:bold; color:#992536" />
+									</hlayout>
+									<textbox
+										disabled="@load(vm.loginValido ne true)" width="250px"
+										type="password" value="@bind(vm.pessoa.repeteSenha)" />
+								</vlayout>
+
+							</vlayout>
+						</hlayout>
+
+
+						<div align="center">
+							<hbox>
+								<button tooltiptext="Cadastrar"
+									label="CADASTRAR"
+									onClick="@command('abrirModalConfirmaCadastro', visible=true)" />
+							</hbox>
+						</div>
+
+					</vbox>
+				</panelchildren>
+			</panel>
+		</div>
+
+		<window id="modalLogin" width="900px" mode="modal"
+			visible="false">
+			<div align="center" style="padding:15px">
+				<groupbox id="boxServidor" visible="false"
+					closable="false" onOK="@command('validarServidor')">
+					<caption
+						label="SERVIDOR DO TRIBUNAL DE CONTAS DO ESTADO DO MARANHÃO" />
+					<vbox align="center">
+						<label
+							value="Valide seus dados de Servidor do TCE-MA nos campos abaixo." />
+						<label style="font-weight:bold"
+							value="Servidores terceirizados devem se cadastrar como SOCIEDADE e se dirigir à ESCEX para ter seu tipo de usuário regularizado." />
+						<hbox>
+							<vbox align="center" width="150px">
+								<intbox placeholder="Matrícula"
+									maxlength="9" width="130px"
+									value="@bind(vm.matriculaServidor)" />
+								<textbox placeholder="CPF" width="130px"
+									value="@bind(vm.cpfServidor)"
+									w:onBind="jq(this).mask('999.999.999-99');" />
+								<separator />
+								<button label="Validar"
+									onClick="@command('validarServidor')" />
+							</vbox>
+							<space />
+							<grid>
+								<columns>
+									<column width="100px" />
+									<column />
+								</columns>
+								<rows>
+									<row>
+										<label style="font-weight:bold"
+											value="Matrícula:" />
+										<label
+											value="@load(vm.usuarioSeg.matricula)" />
+									</row>
+									<row>
+										<label style="font-weight:bold"
+											value="Nome:" />
+										<label
+											value="@load(vm.usuarioSeg.funcionario.nome)" />
+									</row>
+									<row>
+										<label style="font-weight:bold"
+											value="Lotação:" />
+										<label
+											value="@load(vm.usuarioSeg.funcionario.funcionarioFuncional.lotacaoExercicio.descricao)" />
+									</row>
+								</rows>
+							</grid>
+						</hbox>
+					</vbox>
+				</groupbox>
+
+				<groupbox id="boxJuridiscionado" visible="false"
+					closable="false" onOK="@command('validarJurisdicionado')">
+					<caption
+						label="JURISDICIONADO DO TRIBUNAL DE CONTAS DO ESTADO DO MARANHÃO" />
+					<vbox align="center">
+						<label
+							value="Valide seus dados de Jurisdicionado no campo abaixo." />
+						<label style="font-weight:bold"
+							value="Apenas Jurisdicionados gestores terão seus dados validados. Jurisdicionados não-gestores devem se cadastrar como sociedade e entrar em contato com a ESCEX para ter seu tipo de usuário regularizado." />
+						<hbox>
+							<vbox align="center" width="150px">
+								<textbox placeholder="CPF" width="130px"
+									value="@bind(vm.cpfJurisdicionado)"
+									w:onBind="jq(this).mask('999.999.999-99');" />
+								<separator />
+								<button label="Validar"
+									onClick="@command('validarJurisdicionado')" />
+							</vbox>
+							<space />
+							<grid>
+								<columns>
+									<column width="100px" />
+									<column />
+								</columns>
+								<rows>
+									<row>
+										<label style="font-weight:bold;"
+											value="Status:" />
+										<label
+											value="Validação realizada" visible="@load(vm.loginValido)" />
+									</row>
+								</rows>
+							</grid>
+						</hbox>
+					</vbox>
+				</groupbox>
+
+				<separator />
+				<button label="Fechar"
+					onClick="@command('abrirModalLoginDeUsuario', visible=false)" />
+			</div>
+		</window>
+
+		<window id="modalConfirmaCadastro" mode="modal"
+			visible="false">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true"
+					value="Confirma o seu cadastro?" />
+
+				<separator />
+				<hlayout>
+					<button id="buttonSim" label="Sim"
+						onClick="@command('cadastro')" autodisable="buttonSim, buttonNao" />
+					<button id="buttonNao" label="Não"
+						onClick="@command('abrirModalConfirmaCadastro', visible=false)" />
+				</hlayout>
+			</vbox>
+		</window>
+
+
+	</window>
+</zk>

@@ -1,0 +1,61 @@
+<zk>
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.client.pages.EventosVM')">
+		<panel title="Meus eventos" border="normal">
+			<panelchildren>
+				<vlayout>
+					<hbox align="center">
+						<textbox placeholder="Filtrar por evento"
+							instant="true" width="405px"
+							value="@bind(vm.filtroEvento.filtro1)"
+							onChange="@command('aplicarFiltro')" />
+						<textbox placeholder="Filtrar por atividade"
+							instant="true" width="240px"
+							value="@bind(vm.filtroEvento.filtro2)"
+							onChange="@command('aplicarFiltro')" />
+						<button label="Limpar filtro"
+							onClick="@command('limparFiltro')" />
+					</hbox>
+					<grid model="@bind(vm.inscricoes)" mold="paging"
+						pageSize="4" onCreate="@command('carregarEventosPorParticipante')"
+						emptyMessage="Sem itens encontrados.">
+						<columns>
+							<column
+								sort="auto(atividade.evento.nome)" label="Evento" />
+							<column align="center"
+								sort="auto(atividade.nome)" label="Atividade" />
+							<column align="center" width="150px"
+								label="Data" />
+							<column align="center" width="170px"
+								label="Inscrição aprovada" />
+							<column align="center" width="120px"
+								sort="auto(frequencia)" label="Frequência" />
+							<column align="center" width="200px"
+								label="Certificado disponível" />
+						</columns>
+						<template name="model"
+							var="participanteInscrito">
+							<row>
+								<label style="font-weight:bold"
+									value="@load(participanteInscrito.atividade.evento.nomeStr)" />
+								<label
+									value="@load(participanteInscrito.atividade.nomeStr)" />
+								<label
+									value="@load(participanteInscrito.atividade.dataStr)" />
+								<label
+									value="@load(participanteInscrito.inscricaoAprovadaStr)" />
+								<label
+									value="@load(participanteInscrito.frequenciaStr)" />
+								<label value="@load(participanteInscrito.certificadoDisponivelStr)" />
+							</row>
+						</template>
+						<foot>
+							<footer span="6"
+								label="@load(vm.textoRodape)" />
+						</foot>
+					</grid>
+				</vlayout>
+			</panelchildren>
+		</panel>
+	</window>
+</zk>

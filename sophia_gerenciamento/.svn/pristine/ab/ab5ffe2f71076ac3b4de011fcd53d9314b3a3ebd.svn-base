@@ -1,0 +1,144 @@
+<?page title="Sophia - Gerenciamento" contentType="text/html;charset=UTF-8"?>
+
+<zk xmlns:x="xhtml" xmlns:w="client">
+	<?link rel="shortcut icon" type="image/x-icon" href="imagens/SOPHIA_icon.png"?>
+	<?link href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" rel="stylesheet"?>
+
+	<script type="text/javascript" src="/js/jquery.maskedinput.js" />
+	<script type="text/javascript">
+		$.mask.definitions['A']='[A-Z]';
+		$.mask.definitions['d']='[0123]';
+		$.mask.definitions['m']='[01]'; $.mask.definitions['y']='[12]';
+	</script>
+
+	<style dynamic="true" src="/css/base.css" />
+
+	<window
+		viewModel="@id('vm') @init('br.gov.ma.tce.sophia.gerenciamento.pages.IndexVM')">
+
+		<menubar>
+			<menuitem label="SOPHIA - Gerenciamento"
+				image="/imagens/SOPHIA_icon.png" onClick="@command('homepage')" />
+			<menu label="Eventos">
+				<menupopup>
+					<menuitem label="Criar evento"
+						iconSclass="z-icon-plus-circle" onClick="@command('criarEvento')" />
+					<menuitem label="Gerenciar eventos"
+						iconSclass="z-icon-edit" onClick="@command('gerenciarEventos')" />
+					<menuitem label="Eventos realizados"
+						iconSclass="z-icon-check-square"
+						onClick="@command('eventosRealizados')" />
+					<menuitem label="Eventos cancelados"
+						iconSclass="z-icon-ban" onClick="@command('eventosCancelados')" />
+				</menupopup>
+			</menu>
+			<menu label="Atividades">
+				<menupopup>
+					<menuitem label="Criar atividade"
+						iconSclass="z-icon-plus-circle"
+						onClick="@command('criarAtividade')" />
+					<menuitem label="Gerenciar atividades"
+						iconSclass="z-icon-edit"
+						onClick="@command('gerenciarAtividades')" />
+					<menuitem label="Inscrever participantes"
+						iconSclass="z-icon-user-plus"
+						onClick="@command('inscreverParticipantes')" />
+					<menuitem label="Registrar presença"
+						iconSclass="z-icon-check-circle"
+						onClick="@command('registrarPresenca')" />
+					<menu label="Relatórios"
+						iconSclass="z-icon-th-list">
+						<menupopup>
+							<menuitem
+								label="Relatório de avaliação de reação de atividades"
+								iconSclass="z-icon-check"
+								onClick="@command('relatorioDeAvaliacaoDeReacaoAtividades')" />
+						</menupopup>
+					</menu>
+				</menupopup>
+			</menu>
+			<menu label="Participantes">
+				<menupopup>
+					<menuitem label="Gerenciar inscrições"
+						iconSclass="z-icon-list-ul"
+						onClick="@command('gerenciarInscricoes')" />
+					<menuitem label="Gerenciar listas de interesse"
+						iconSclass="z-icon-list-ol"
+						onClick="@command('gerenciarListasDeInteresse')" />
+					<menuitem label="Gerenciar participantes"
+						iconSclass="z-icon-edit"
+						onClick="@command('gerenciarParticipantes')" />
+					<menuitem label="Envio de mensagens"
+						iconSclass="z-icon-envelope-square"
+						onClick="@command('envioDeMensagens')" />
+					<menuitem
+						label="Registro de capacitações de servidores"
+						iconSclass="z-icon-search-plus"
+						onClick="@command('registroDeCapacitacoes')" />
+					<menu label="Relatórios"
+						iconSclass="z-icon-th-list">
+						<menupopup>
+							<menuitem
+								label="Relatório mensal de capacitação de servidores"
+								iconSclass="z-icon-calendar"
+								onClick="@command('relatorioMensalCapacitacoes')" />
+						</menupopup>
+					</menu>
+				</menupopup>
+			</menu>
+			<menu label="Colaboradores">
+				<menupopup>
+					<menuitem
+						label="Atribuir colaboradores a atividades"
+						iconSclass="z-icon-plus-circle"
+						onClick="@command('atribuirColaboradoresAAtividades')" />
+					<menuitem label="Gerenciar colaboradores"
+						iconSclass="z-icon-edit"
+						onClick="@command('gerenciarColaboradores')" />
+				</menupopup>
+			</menu>
+
+			<menu label="Certificados">
+				<menupopup>
+					<menuitem label="Criar modelo de certificado"
+						iconSclass="z-icon-plus-square"
+						onClick="@command('criarModeloDeCertificado')" />
+					<menuitem label="Disponibilizar certificados"
+						iconSclass="z-icon-check"
+						onClick="@command('disponibilizarCertificados')" />
+					<menuitem label="Certificados disponibilizados"
+						iconSclass="z-icon-bars"
+						onClick="@command('certificadosDisponibilizados')" />
+				</menupopup>
+			</menu>
+
+			<menu label="@load(vm.usuario.pessoa.nomeSobrenome)"
+				sclass="right-menu">
+				<menupopup>
+					<menuitem label="Meus dados" visible="false" />
+					<menuitem label="Trocar senha" visible="false" />
+					<menuitem label="Sair" iconSclass="z-icon-sign-out"
+						onClick="@command('abrirModalSair', visible=true)" />
+				</menupopup>
+			</menu>
+		</menubar>
+
+		<div align="left">
+			<include src="@load(vm.caminhoInclude)" />
+		</div>
+
+		<window id="modalSair" mode="modal" visible="false">
+			<vbox align="center" style="padding:15px">
+				<label multiline="true"
+					value="Deseja realmente sair do sistema?" />
+
+				<separator />
+				<hlayout>
+					<button label="Sim" onClick="@command('sair')" />
+					<button label="Não"
+						onClick="@command('abrirModalSair', visible=false)" />
+				</hlayout>
+			</vbox>
+		</window>
+	</window>
+</zk>
