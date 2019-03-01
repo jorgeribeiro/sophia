@@ -102,3 +102,10 @@ hs_err_pid*
 target/
 
 # End of https://www.gitignore.io/api/java,eclipse,java-web
+
+# Edit at https://www.gitignore.io/?templates=svn
+
+### SVN ###
+.svn/
+
+# End of https://www.gitignore.io/api/svn

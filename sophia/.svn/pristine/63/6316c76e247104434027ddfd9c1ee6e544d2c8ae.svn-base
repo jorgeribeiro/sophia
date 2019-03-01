@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Class-Path: gestores_server.jar 
- seguranca_cache_server.jar 
- sophia_ejb.jar
-
