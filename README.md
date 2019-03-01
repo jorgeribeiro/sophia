@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/jorgimello/sophia/master/sophia/WebContent/imagens/SOPHIA3.png">
+    <img height="140" src="https://raw.githubusercontent.com/jorgimello/sophia/master/sophia/WebContent/imagens/SOPHIA3.png">
 </p>
 
 Aplicação desenvolvida para a Escola Superior de Controle Externo (ESCEX), setor do TCE/MA.
